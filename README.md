@@ -66,7 +66,7 @@ the VM environement does not bring any issue for that task
 
 ### Setup of a Compute Node VM
 
-The problems arised for the compute node.
+The problems arise with the compute node setup.
 
 Create a new VM using proxmox, select an hypervisor (here proxmox-2, eventually assign it to an existing Resource Pool):
 
