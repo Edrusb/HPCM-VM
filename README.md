@@ -4,8 +4,8 @@
 
 The objective here is to be able to experiment with the HPCM software, when you don't have the hardware and money that goes with
 it or want to somehow prepare a big scale operation on a real HPC cluster. Thus the Performance (the P of HPC - High Performance Computing)
-is not the target here, but rather the ability to use and test many features of HPCM:
-- install HPCM and eventually SU_Leaders in their VMs
+is not the target here, the objective is rather the ability to use and test many features of HPCM:
+- install HPCM and eventually SU_Leaders in their own VMs
 - set up a large number of compute nodes (as VM)
 - PXE Boot those compute nodes
 - setup repos and repo groups
@@ -18,7 +18,7 @@ is not the target here, but rather the ability to use and test many features of 
 - deploy and run some PMI application
 - play with HPCM slots
 
-The HPCM features that will not be available in VM a environment are:
+The HPCM features that will not be available in a VM environment are:
 - power management (the ability to boot or reboot a compute node from HPCM)
 - network switch management
 - Slingshot HSN will not be available (well, I have not checked whether a software emulation was exiting, but I doubt it would)
@@ -73,6 +73,7 @@ Create a new VM using proxmox, select an hypervisor (here proxmox-2, eventually 
 ![Compute VM step1](pictures/compute-vm-step1.png)
 
 Next we do not need any OS (HPCM will provide the OS/image by mean of PXE boot)
+
 ![Compute VM step2](pictures/compute-vm-step2.png)
 
 Then select the BIOS OVMF to get UEFI boot:
@@ -109,12 +110,10 @@ to this VM, the "head" Virtual Network that is connected to the HPCM VM should b
 Complete the VM creation process, then if needed, you can add addition, like a virtual High Speed Network (HSN)
 in addition to the *head* network. Note that the HSN will not be Slingshot powered under this environement...
 
-
 ![Compute VM step3](pictures/compute-vm-step9.png)
 
 
-In this hardware inventory of the VM:
-- the Virtio RNG (Random Number Generator) is mandatory for PXE Boot
-- note the serial port added, it can be used as the console output of the system, so let's keep it
-- the EFI disk is necessary as we say for the EFI data to be stored
+To this hardware inventory must be added:
+- a Virtio RNG (Random Number Generator) for PXE Boot to work
+- a the serial port can be added and be used as the console output of the system (optional)
 - the CD/DVD drive can be removed it will not be used for a Comput node bootstrapped by HPCM
