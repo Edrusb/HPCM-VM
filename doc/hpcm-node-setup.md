@@ -90,6 +90,7 @@ and once booted we can check the inventory of the VM with:
 cm node set --rootfs nfs --writable tmpfs-overlay -n compute03
 ```
 
+>  ```
 >  [root@hpcm1 ~]# cm inventory -n compute03
 >  compute03.bios.Vendor=Proxmox distribution of EDK II
 >  compute03.bios.Version=4.2025.02-4~bpo12+1
@@ -100,6 +101,7 @@ cm node set --rootfs nfs --writable tmpfs-overlay -n compute03
 >  compute03.bios.Characteristics=
 >  compute03.bios.BIOS Revision=0.0
 >  [root@hpcm1 ~]#
+>  ```
 
 we can ssh to the VM from HPCM and for example check the current network interfaces:
 
