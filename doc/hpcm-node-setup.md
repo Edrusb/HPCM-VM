@@ -86,9 +86,13 @@ We can now start the VM and see the HPCM in action with PXE boot:
 
 and once booted we can check the inventory of the VM with:
 
+**
 ```
-cm node set --rootfs nfs --writable tmpfs-overlay -n compute03
+cm inventory -n compute03
 ```
+**
+
+which output is:
 
 >  ```
 >  [root@hpcm1 ~]# cm inventory -n compute03
