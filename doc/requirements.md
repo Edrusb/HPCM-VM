@@ -5,12 +5,12 @@
 To experiment with HPCM and VMs of you will need at least:
 - a single computer, more or bigger one is better:
   - very minimum 16 GiB of RAM, 8 GB for HPCM VM and 8 GB for a single compute node
-  - x86_64 CPU (I could run HCPM + a single compte node VM using only 8 cores, and it was not particularly slow)
+  - x86_64 CPU (I could run HCPM + a single compute node VM using only 8 cores, and it was not particularly slow)
   - Disk/storage at least 300 GiB (can be less but it will difficult to have several slots on the HPCM VM and playing with repos and images will be very restrictive)
-- Physical (IP/Ethernet) network if more than one hypervisor is to be used.
+- Physical (IP/Ethernet) network if more than one hypervisor is to be used. 1 Gbit/s connection to hypervisors is slow but fine, depending on what workload you want to test over the Software "HPC" cluster
 
 ## Virtual Environment used - Proxmox
-I'm a big fan of [Proxmox](https://www.proxmox.com/en/) since year 2019 (thus long before VMWare was "hold down"). Proxmox
+I'm a big fan of [Proxmox Virtual Environment](https://www.proxmox.com/en/) since year 2019 (thus long before VMWare was "hold down"). Proxmox
 is qemu based virtualization wrapped into a nice (read fully featured) Web GUI. A CLI interface is also available, which I very rarely use, but can be useful for automation.
 Proxmox is based on Debian and receive a lot of additional packages to manage the Kernel Virtual Machine (KVM) of the Linux kernel, though the Proxmox/Linux system stays open
 and can receive a lot of customized software additions if needed.
@@ -26,7 +26,7 @@ There is not many constraints here:
     OS of the compute nodes (PXE Boot, Bittorrent imaging, monitoring...)
   - the "head-bmc" network has been created in the infra, but as VMs do not have BMC or iLO by default,
     we will not use until we find and test a [virtual BMC for proxmox](https://github.com/agnon/proxmoxbmc)
-    though from HPCM stand point it exists and is configured
+    though from HPCM stand point, this VLAN exists and is ready for use
 - *eventually* inter-vlan routing (which can be carried by a Linux VM or a proxmox hypervisor, if you have no L3 switch nor router),
 
 If more than one hypervisior is to be used, a physical network will be needed, and the support for 802.1Q (vlan tagging)
