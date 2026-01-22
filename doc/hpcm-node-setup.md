@@ -23,9 +23,9 @@ To cope with that once and for all compute node, let's setup this node template 
 
 Now we can feed the template to HPCM with the following command:
 
-```
-cm node template update -c template1.txt
-```
+>
+> **cm node template update -c template1.txt**
+>
 
 using
 
@@ -34,9 +34,9 @@ using
 fetching the mac address the VM has on its interface to the "head" network, we can setup the
 following [compute03.txt](../resources/compute03.txt) file and feed it to HPCM with:
 
-```
-cm node add -c compute03.txt
-```
+>
+> **cm node add -c compute03.txt**
+>
 
 Some comments on this file content:
 - hostname1, as you guess this is the hostname HPCM will assign to the OS
@@ -50,6 +50,12 @@ Some comments on this file content:
 
 ## Provisionning an image
 Now that the node exists in the HPCM database, we can assign it an image:
+
+>
+> **cm node provision -n compute03 -i rocky8.10  --ignore-power-errors --stage**
+>
+
+which ouput looks like this:
 
 ```
 [root@hpcm1 ~]# cm node provision -n compute03 -i rocky8.10  --ignore-power-errors --stage
@@ -68,15 +74,16 @@ Setting non-autoinstall nodes to provision on their next boot...
 [root@hpcm1 ~]#
 ```
 
-Note that the ```-I``` option is necessary for the command to succeed as HPCM has no way control
-the power of the VM.
+Note that the ```--ignore-power-errors``` option is necessary for the command to succeed as HPCM has no way to check
+the power status of the VM. The same way the ```--stage``` option avoids HPCM trying (and failing) to reboot
+the virtual node.
 
 We also have to set what will be the root filesystem of the VM, here as the VM has no disk we'll use
 NFS mount:
 
-```
-cm node set --rootfs nfs --writable tmpfs-overlay -n compute03
-```
+>
+> **cm node set --rootfs nfs --writable tmpfs-overlay -n compute03**
+>
 
 ## Booting the VM
 
@@ -161,6 +168,10 @@ ID  NAME  IP          MAC                IPV6  BOND_MASTER  BOND_MODE      INTER
 OK the interface name ```eth0``` in HPCM database is ```ens18``` on the OS and eth1 does not exist under the bond0 hat
 so we will remove it:
 
+>
+> **cm node nic delete --nic-name eth1 -n compute03**
+>
+
 ```
 [root@hpcm1 ~]# cm node nic delete --nic-name eth1 -n compute03
 Configuration manager submitting node configuration.
@@ -175,6 +186,10 @@ Node configuration complete.
 ```
 
 We now declare the HSN interface of the VM to HPCM:
+
+>
+> **cm node nic add -m bc:24:11:11:6b:f4 -w hsn -n compute03 --nic-name ens19 -c compute03 -n compute03 --compute-next-ip**
+>
 
 ```
 [root@hpcm1 ~]# cm node nic add -m bc:24:11:11:6b:f4 -w hsn -n compute03 --nic-name ens19 -c compute03 -n compute03 --compute-next-ip
@@ -194,13 +209,55 @@ We now have the following interfaces declared in HPCM:
 ```
 [root@hpcm1 ~]# cm node nic show -n compute03
 ID  NAME  IP          MAC                IPV6  BOND_MASTER  BOND_MODE      INTERFACE_NAME  MANAGED  TYPE  NETWORK_NAME
-18  eth0  10.20.25.1  bc:24:11:30:57:d2  None  bond0        active-backup  compute03       True     mgmt  head
-20  ens19 None        bc:24:11:11:6b:f4  None  None         None           compute03       True     data  hsn
+23  eth0  10.20.25.2  bc:24:11:30:57:d2  None  bond0        active-backup  compute03       True     mgmt  head
+25  ens19 10.20.26.1  bc:24:11:11:6b:f4  None  None         None           compute03       True     data  hsn
 [root@hpcm1 ~]#
 ```
 
-Let's reboot the VM:
+Let's now reboot the VM (from proxmox) and see what's the new network interface HPCM has setup:
 
+```
+direct node compute03 has been issued a shutdown command
+[root@hpcm1 ~]# ssh compute03 ifconfig
+bond0: flags=5187<UP,BROADCAST,RUNNING,MASTER,MULTICAST>  mtu 1500
+        inet 10.20.25.2  netmask 255.255.255.0  broadcast 0.0.0.0
+        inet6 fe80::be24:11ff:fe30:57d2  prefixlen 64  scopeid 0x20<link>
+        ether bc:24:11:30:57:d2  txqueuelen 1000  (Ethernet)
+        RX packets 10750  bytes 201322228 (191.9 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 10335  bytes 1452387 (1.3 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+ens18: flags=6211<UP,BROADCAST,RUNNING,SLAVE,MULTICAST>  mtu 1500
+        ether bc:24:11:30:57:d2  txqueuelen 1000  (Ethernet)
+        RX packets 10756  bytes 201322648 (191.9 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 10335  bytes 1452387 (1.3 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+hsn0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 9000
+        inet 10.20.26.1  netmask 255.255.255.0  broadcast 10.20.26.255
+        inet6 fe80::be24:11ff:fe11:6bf4  prefixlen 64  scopeid 0x20<link>
+        ether bc:24:11:11:6b:f4  txqueuelen 1000  (Ethernet)
+        RX packets 22  bytes 3144 (3.0 KiB)
+        RX errors 0  dropped 3  overruns 0  frame 0
+        TX packets 33  bytes 3638 (3.5 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+[root@hpcm1 ~]#
+```
+
+OK, ```ens19``` interface has been renamed as ```hsn0``` why not, what's important
+is the IP it has been assigned which is good!
 
 
 
