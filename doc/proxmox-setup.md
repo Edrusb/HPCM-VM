@@ -50,11 +50,11 @@ Choose as much CPU socket/core as you want (depending on what workload you want 
 
 ![Compute VM step3](../pictures/compute-vm-step6.png)
 
-Choose as much RAM as you want still depending on the workload you expect to deploy in your HPC cluster
+Choose as much RAM as you want (and have) still depending on the workload you expect to deploy in your HPC cluster
 
 ![Compute VM step3](../pictures/compute-vm-step7.png)
 
-Last set the first Network card you want, other will be added later.
+Last set the first Network card you want, the other NIC will be added later.
 
 Note that the "head" Virtual Network should be connected to this VM for HPCM to provide PXE boot support.
 
