@@ -46,7 +46,7 @@ thus delete the preconfigured disk and click "next":
 
 ![Compute VM step3](../pictures/compute-vm-step5.png)
 
-Choose as much socket/core as you want (depending on what workload you want to have running on you HPC cluster):
+Choose as much CPU socket/core as you want (depending on what workload you want to have running on you HPC cluster):
 
 ![Compute VM step3](../pictures/compute-vm-step6.png)
 
