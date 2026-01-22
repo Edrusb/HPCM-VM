@@ -41,4 +41,3 @@ will be necessary to propagate VLANs between hypervisors.
 | ---              | [top](../README.md)   | [Next](proxmox-setup.md) |
 |:-----------------|:---------------------:|-------------------------:|
 
-w

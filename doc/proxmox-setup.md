@@ -74,4 +74,5 @@ To this hardware inventory has been added:
 
 
 
-
+| [Prev](requirements.md) | [top](../README.md)   | [Next](hpcm-node-setup.md) |
+|:- ----------------------|:---------------------:|---------------------------:|
