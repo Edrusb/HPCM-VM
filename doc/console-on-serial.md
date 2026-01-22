@@ -1,7 +1,7 @@
-# Console port on Serial
+# Console on Serial Port
 
 ## Overview
-Proxmox allows the possibility to add a serial device
+Proxmox gives the possibility to add a serial device
 (a virtual serial device) to a VM.
 
 From a VM point of view, this virtual devices shows as if
@@ -16,20 +16,20 @@ What is missing is a piece of sofware that links this hypervisor terminal
 to a IP/port and adhoc protocol (IPMI, Redfish...). If such piece of
 software was existing, I'm pretty sure it would also provide the ability
 to manage the power of the VM from outside the hypervisor, making a virtual
-Board Managment Controller (BMC).
+Board Managment Controller (BMC).... but wait! This [stuff](https://github.com/agnon/proxmoxbmc) exists!
 
 For now we will just see with HPCM how to use what's serial console is available on
-Proxmox.
+Proxmox, later we will see how to setup this __proxmoxbmc__ stuff.
 
 ## VM configuration
 
-As we detailed the VM setup just need you to add a __serial__ device:
+We detailed the VM setup previously, we just need to add, if not already done, a *serial* device:
 
 ![serial device on VM](../pictures/serial-device.png)
 
 ##  HPCM configuration
 
-It is possible to modify the console port to use for an existing VM like this:
+From HPCM standpoint, it's possible to modify the console port an existing compute node is expected to uses like this:
 
 >
 > **cm node set --console-device ttyS0 -n compute03**
@@ -46,7 +46,7 @@ Then use this ```vm-serial``` template in place of the ```vm``` one we used earl
 
 ## Proxmox side
 
-let's stop the ```compute03``` VM, connect on the hypervisor and run
+let's stop the ```compute03``` VM, ssh to the hypervisor and there, run
 the ```qm terminal <VMID>```:
 
 ```
@@ -66,8 +66,9 @@ starting serial terminal on interface serial0 (press Ctrl+O to exit)
 
 ```
 
-First, note that to exit from the terminal CTRL+O is required, then after a few tens of
-seconds, the terminal clears and we can follow the boot process from that serial interface:
+First, note that only a **CTRL+O** sequence will let you exit from this terminal line.
+
+After a few tens of seconds, the terminal clears and we can follow the boot process from that serial interface:
 
 ```
 >>Start PXE over IPv4.
@@ -106,8 +107,39 @@ http://10.20.25.254/boot/images/rocky8.10/vmlinuz-4.18.0-553.el8_10.x86_64... ok
 CM iPXE: load initrd
 http://10.20.25.254/boot/images/rocky8.10/initramfs-4.18.0-553.el8_10.x86_64.img...
 
-[...]
+<OUTPUT TRUNCATED>
+
+[  OK  ] Started System Logging Service.
+         Stopping NTP client/server...
+[  OK  ] Stopped NTP client/server.
+         Starting NTP client/server...
+[  OK  ] Started NTP client/server.
+[  OK  ] Started CM Configuration.
+         Starting Crash recovery kernel arming...
+         Starting SMC Heartbeat Service...
+[  OK  ] Started SMC Heartbeat Service.
+[  OK  ] Reached target Multi-User System.
+         Starting Update UTMP about System Runlevel Changes...
+[  OK  ] Started Update UTMP about System Runlevel Changes.
+[  OK  ] Started Crash recovery kernel arming.
+
+Rocky Linux 8.10 (Green Obsidian)
+Kernel 4.18.0-553.el8_10.x86_64 on an x86_64
+
+compute03 login:
+Rocky Linux 8.10 (Green Obsidian)
+Kernel 4.18.0-553.el8_10.x86_64 on an x86_64
+
+compute03 login: root
+Password:
+Last login: Thu Jan 22 17:05:52 from 10.20.25.254
+[root@compute03 ~]#
+
 ```
 
 
+
 [^1]: replace the star (*) by a number, like in here ```/dev/ttyS0```
+
+| [Prev](hpcm-node-setup.md) | [top](../README.md)   | [Next](proxmoxbmc.md) |
+|:---------------------------|:---------------------:|----------------------:|

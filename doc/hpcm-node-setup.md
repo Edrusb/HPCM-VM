@@ -264,5 +264,5 @@ is the IP it has been assigned which is good!
 [^1]: Link AGgregation, this is the term used in the network culture, while bonding is the
  term for almost the same thing in the system/compute culture.
 
-| [Prev](proxmox-setup.md) | [top](../README.md)   | [Next](proxmox-setup.md) |
-|:-------------------------|:---------------------:|-------------------------:|
+| [Prev](proxmox-setup.md) | [top](../README.md)   | [Next](console-on-serial.md) |
+|:-------------------------|:---------------------:|-----------------------------:|

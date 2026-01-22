@@ -29,5 +29,6 @@ The HPCM features that will not be available in a VM environment are:
 ### 1 - [Requirements](doc/requirements.md)
 ### 2 - [VM setup](doc/proxmox-setup.md)
 ### 3 - [HPCM tweeking](doc/hpcm-node-setup.md)
-
+### 4 - [Console on Serial Port)(doc/console-on-serial.md)
+### 5 - [Virtual BMC](doc/proxmoxbmc.md)
 
