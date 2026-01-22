@@ -15,8 +15,8 @@ Here below the VM configuration I used for HPCM VM
 
 ![HPCM Virtual hardware](../pictures/hpcm-vm.png)
 
-Using the HPCM image with the embedded OS (here RockyLinux 8.10) is straight formward as described in the HPCM documentation,
-the VM environement does not bring any issue for that task
+Installing HPCM using the provided image with the embedded OS (here RockyLinux 8.10) is straight formward as described in the HPCM documentation,
+the VM environement does not bring any issue for that task.
 
 ## Setup of a Compute Node VM
 
