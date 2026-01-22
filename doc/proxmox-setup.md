@@ -35,7 +35,7 @@ Then select the BIOS OVMF to get UEFI boot:
 ![Compute VM step3](../pictures/compute-vm-step3.png)
 
 Also add an EFI Storage and uncheck the Pre-Enrolle Keys box, check the Qemu Agent box as
-the default images HPCM provides already provide a qemu-guest-agent, which will let you
+the default images HPCM provides already provide a *qemu-guest-agent*, which will let you
 transparently interact from Proxmox with the running operating system (including cleanly shutting
 down the OS from Proxmox):
 
