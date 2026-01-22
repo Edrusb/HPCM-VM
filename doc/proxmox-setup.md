@@ -10,7 +10,6 @@ The VM to create for the HPCM software should have:
 - 8 cores seems OK, more if possible to speedup compression operation (image creation for example)
 - a virtual CD/DVD Drive to boot on the ISO image during the HPCM installation process
 - UEFI Boot is mandatory (Proxmox will require the creation of a tiny virtual disk to store the EFI parameters)
-- Virtio Random Number Generator is mandatory for UEFI boot
 
 Here below the VM configuration I used for HPCM VM
 
