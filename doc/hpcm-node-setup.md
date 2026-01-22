@@ -52,7 +52,7 @@ Some comments on this file content:
 Now that the node exists in the HPCM database, we can assign it an image:
 
 ```
-[root@hpcm1 ~]# **cm node provision -n compute03 -i rocky8.10  --ignore-power-errors --stage**
+[root@hpcm1 ~]# cm node provision -n compute03 -i rocky8.10  --ignore-power-errors --stage
 
 Assigning image "rocky8.10" and kernel "4.18.0-553.el8_10.x86_64" to the nodes...
 
@@ -85,18 +85,21 @@ We can now start the VM and see the HPCM in action with PXE boot:
 ![VM PXE booting](../pictures/vm-booting.png)
 
 and once booted we can check the inventory of the VM with:
+
 ```
-[root@hpcm1 ~]# **cm inventory -n compute03**
-compute03.bios.Vendor=Proxmox distribution of EDK II
-compute03.bios.Version=4.2025.02-4~bpo12+1
-compute03.bios.Release Date=07/10/2025
-compute03.bios.Address=0xE8000
-compute03.bios.Runtime Size=96 kB
-compute03.bios.ROM Size=64 kB
-compute03.bios.Characteristics=
-compute03.bios.BIOS Revision=0.0
-[root@hpcm1 ~]#
+cm node set --rootfs nfs --writable tmpfs-overlay -n compute03
 ```
+
+>  [root@hpcm1 ~]# cm inventory -n compute03
+>  compute03.bios.Vendor=Proxmox distribution of EDK II
+>  compute03.bios.Version=4.2025.02-4~bpo12+1
+>  compute03.bios.Release Date=07/10/2025
+>  compute03.bios.Address=0xE8000
+>  compute03.bios.Runtime Size=96 kB
+>  compute03.bios.ROM Size=64 kB
+>  compute03.bios.Characteristics=
+>  compute03.bios.BIOS Revision=0.0
+>  [root@hpcm1 ~]#
 
 we can ssh to the VM from HPCM and for example check the current network interfaces:
 
