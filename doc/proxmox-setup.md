@@ -14,7 +14,7 @@ The VM to create should have:
 
 Here below the VM configuration I used for HPCM VM
 
-![HPCM Virtual hardware](pictures/hpcm-vm.png)
+![HPCM Virtual hardware](../pictures/hpcm-vm.png)
 
 Using the HPCM image with the embedded OS (here RockyLinux 8.10) is straight formward as described in the HPCM documentation,
 the VM environement does not bring any issue for that task
@@ -25,45 +25,45 @@ The problems arise with the compute node setup.
 
 Create a new VM using Proxmox, select an hypervisor (here proxmox-2, eventually assign it to an existing Resource Pool):
 
-![Compute VM step1](pictures/compute-vm-step1.png)
+![Compute VM step1](../pictures/compute-vm-step1.png)
 
 Next we do not need any OS (HPCM will provide the OS/image by mean of PXE boot)
 
-![Compute VM step2](pictures/compute-vm-step2.png)
+![Compute VM step2](../pictures/compute-vm-step2.png)
 
 Then select the BIOS OVMF to get UEFI boot:
 
-![Compute VM step3](pictures/compute-vm-step3.png)
+![Compute VM step3](../pictures/compute-vm-step3.png)
 
 Also add an EFI Storage and uncheck the Pre-Enrolle Keys box, check the Qemu Agent box as
 the default images HPCM provides already provide a qemu-guest-agent, which will let you
 transparently interact from Proxmox with the running operating system (including cleanly shutting
 down the OS from Proxmox):
 
-![Compute VM step3](pictures/compute-vm-step4.png)
+![Compute VM step3](../pictures/compute-vm-step4.png)
 
 You don't need any disk (unless you want to setup a SU_Leader, though disks can be added once the VM has been created),
 thus delete the preconfigured disk and click "next":
 
-![Compute VM step3](pictures/compute-vm-step5.png)
+![Compute VM step3](../pictures/compute-vm-step5.png)
 
 Choose as much socket/core as you want (depending on what workload you want to have running on you HPC cluster):
 
-![Compute VM step3](pictures/compute-vm-step6.png)
+![Compute VM step3](../pictures/compute-vm-step6.png)
 
 Choose as much RAM as you want still depending on the workload you expect to deploy in your HPC cluster
 
-![Compute VM step3](pictures/compute-vm-step7.png)
+![Compute VM step3](../pictures/compute-vm-step7.png)
 
 Last set the first Network card you want, other will be added later.
 
 Note that the "head" Virtual Network should be connected to this VM for HPCM to provide PXE boot support.
 
-![Compute VM step3](pictures/compute-vm-step8.png)
+![Compute VM step3](../pictures/compute-vm-step8.png)
 
 Complete the VM creation process.
 
-![Compute VM step3](pictures/compute-vm-step9.png)
+![Compute VM step3](../pictures/compute-vm-step9.png)
 
 To this hardware inventory has been added:
 - a Virtio RNG (Random Number Generator) this is **mandatory** for PXE Boot to work
