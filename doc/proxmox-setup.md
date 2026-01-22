@@ -1,7 +1,7 @@
 # Implementation
 
 ## Installing HPCM from an HPE provided ISO
-The VM to create should have:
+The VM to create to receive the HPCM software should have:
 - at least 2 network interfaces
     - one for the public network,
     - one for the HPC admin (aka "head" network)
