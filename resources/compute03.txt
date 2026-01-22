@@ -1,0 +1,2 @@
+[discover]
+hostname1=compute03, internal_name=service03, template_name=vm, mgmt_net_macs="BC:24:11:30:57:D2"

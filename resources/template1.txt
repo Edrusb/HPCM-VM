@@ -1,0 +1,2 @@
+[templates]
+name=vm, architecture=x86_64, conserver_logging=no, conserver_ondemand=no, switch_mgmt_network=no, console_device=tty1, card_type="none"
