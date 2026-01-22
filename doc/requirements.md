@@ -30,11 +30,15 @@ There is not many constraints here:
 If more than one hypervisior is to be used, a physical network will be needed, and the support for 802.1Q (vlan tagging)
 will be necessary to propagate VLANs between hypervisors.
 
-If you plan to use UDPcast to push images to the compute nodes, you'll need to have support for multicast on
-your network, espetially an IGMP Querier will be needed to query which listener are in which group, this concerns
-the "head" VLAN. If you do not want to bother with that complexity, keep using the default bittorrent method or try
-the rsync alternative.
+>[!Note]
+> If you plan to use UDPcast to push images to the compute nodes, you'll need to have support for multicast on
+> your network, espetially an IGMP Querier will be needed to query which listener are in which group, this concerns
+> the "head" VLAN. If you do not want to bother with that complexity, keep using the default bittorrent method or try
+> the rsync alternative.
 
 
 
+| ---              | [top](../README.md)   | [Next](proxmox-setup.md) |
+|:-----------------|:---------------------:|-------------------------:|
 
+w
