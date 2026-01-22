@@ -86,26 +86,22 @@ We can now start the VM and see the HPCM in action with PXE boot:
 
 and once booted we can check the inventory of the VM with:
 
-**
-```
-cm inventory -n compute03
-```
-**
+>
+> **cm inventory -n compute03**
+>
 
-which output is:
-
->  ```
->  [root@hpcm1 ~]# cm inventory -n compute03
->  compute03.bios.Vendor=Proxmox distribution of EDK II
->  compute03.bios.Version=4.2025.02-4~bpo12+1
->  compute03.bios.Release Date=07/10/2025
->  compute03.bios.Address=0xE8000
->  compute03.bios.Runtime Size=96 kB
->  compute03.bios.ROM Size=64 kB
->  compute03.bios.Characteristics=
->  compute03.bios.BIOS Revision=0.0
->  [root@hpcm1 ~]#
->  ```
+```
+[root@hpcm1 ~]# cm inventory -n compute03
+compute03.bios.Vendor=Proxmox distribution of EDK II
+compute03.bios.Version=4.2025.02-4~bpo12+1
+compute03.bios.Release Date=07/10/2025
+compute03.bios.Address=0xE8000
+compute03.bios.Runtime Size=96 kB
+compute03.bios.ROM Size=64 kB
+compute03.bios.Characteristics=
+compute03.bios.BIOS Revision=0.0
+[root@hpcm1 ~]#
+```
 
 we can ssh to the VM from HPCM and for example check the current network interfaces:
 
