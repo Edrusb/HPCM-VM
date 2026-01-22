@@ -66,7 +66,7 @@ Complete the VM creation process.
 
 To this hardware inventory has been added:
 - a Virtio RNG (Random Number Generator) is **mandatory** for PXE Boot to work
-- a the serial port can be added and be used as the console output of the system (optional) see [Console on Serial](console-on-serial.md)
+- a serial port can be added and be used as the console output of the system (optional) see [Console on Serial](console-on-serial.md)
 - an additional network interface for example, the High Speed Network emulation
 - the CD/DVD drive can be removed it will not be used for a compute node bootstrapped by HPCM
 
