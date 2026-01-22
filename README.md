@@ -1,11 +1,14 @@
-# HPCM on VM
+# HPCM on VM and for VMs
 
 ## Abstract
-[HPCM](https://www.hpe.com/psnow/doc/a00044858enw) purpose is to manage Clusters of High Performance Computers... so why using HPCM to manage Virtual Machines?
+[HPCM](https://www.hpe.com/psnow/doc/a00044858enw) purpose is to manage Clusters of High Performance Computers, those optimzed hardware where
+performance means hardware... so why using HPCM to manage Virtual (= software) Machines?
 
 The objective here is to be able to experiment with the HPCM software, when you don't have the hardware and money that goes with
-it or want to somehow prepare a big scale operation on a real HPC cluster. Thus the Performance (the P of HPC - High Performance Computing)
-is not the target here, the objective is rather the ability to use and test many features of HPCM:
+it or want to somehow prepare a big scale operation that will take place later on a real/hardware-powered HPC cluster.
+
+Thus the Performance (the P of HPC - High Performance Computing)
+is not the target here, the objectives are rather the ability to use and test as many features of HPCM as possible:
 - install HPCM and eventually SU_Leaders in their own VMs
 - set up a large number of compute nodes (as VM)
 - PXE Boot those compute nodes
@@ -22,6 +25,7 @@ is not the target here, the objective is rather the ability to use and test many
 The HPCM features that will not be available in a VM environment are:
 - power management (the ability to boot or reboot a compute node from HPCM)
 - network switch management
+- remote console port access
 - Slingshot HSN will not be available (well, I have not checked whether a software emulation was exiting, but I doubt it would)
 
 ## Table of Content
