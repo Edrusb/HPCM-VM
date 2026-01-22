@@ -1,0 +1,2 @@
+[templates]
+name=vm-serial, architecture=x86_64, conserver_logging=no, conserver_ondemand=no, switch_mgmt_network=no, console_device=ttyS0, card_type="none"
