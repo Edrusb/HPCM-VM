@@ -119,7 +119,7 @@ janv. 23 12:21:10 vbmc pbmcd[909]: 2026-01-23 12:21:10,222 909 INFO ProxmoxBMC [
 root@vbmc:~#
 ```
 
-### Proxmox VE authentication
+## Proxmox VE authentication
 
 To access PVE API we need to authenticate with a token. This has to be created first.
 
@@ -150,7 +150,7 @@ thus here assigne the role we defined earlier to the token we just created:
 ![token permission](../pictures/token-permission.png)
 
 
-### Configuration
+## Proxmoxbmc Configuration
 
 To a give a BMC feature to a given VM the *pbmcd* daemon must also be configured.
 This is done in the save virtuel environement (venv) using the **pbmc** command (still in
@@ -196,7 +196,7 @@ must first start it:
 ```
 
 
-### Updating HPCM
+## Updating HPCM
 
 we can now add the BMC parameter to the compute03 node in HPCM
 
