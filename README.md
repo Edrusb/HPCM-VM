@@ -2,7 +2,7 @@
 
 ## Abstract
 [HPCM](https://www.hpe.com/psnow/doc/a00044858enw) purpose is to manage Clusters of High Performance Computers, things where
-performance means hardware... so why using HPCM to manage Virtual Machines (i.e. software computers)?
+performance means *hardware*... so why using HPCM to manage Virtual Machines (i.e. *software* computers)?
 
 The objective here is to be able to experiment with the HPCM software, when you don't have the hardware and money that goes with
 it or want to somehow prepare a big scale operation that will take place later on a real-hardware-powered HPC cluster.
