@@ -159,12 +159,13 @@ the venv):
 ```
 cd ~/proxmoxbmc
 source .env/bin/activate
-(.env) root@vbmc:~/proxmoxbmc# pbmc add --username admin --password password --port 9001 --proxmox-address proxmox-6.ezmeral.edrusb.org --token-user root@pam --token-name vbmc-token --token-value xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx 113
+(.env) root@vbmc:~/proxmoxbmc# pbmc add --username admin --password password --port 623 --address 10.13.30.253 --proxmox-address proxmox-6.ezmeral.edrusb.org --token-user root@pam --token-name vbmc-token --token-value xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx 113
 ````
 
 In the previous output:
-- we assigned TCP port 9001 to the BMC of the compute03 we created for HPCM PXE boot. This
+- we assigned TCP port 623 to the BMC of the compute03 we created for HPCM PXE boot. This
   VM has a VMID of 113, where from the last argument on the command-line
+- the --address is necessary and should point to an IP addres of the vBMC (else the service listens on the loopback interface of the VM and will not be reachable by HPCM)
 - the username and password are the one to use to connect to the virtual BMC service on this port
 - the proxmox-address is the hostname/IP address of one of the hypervisor of the PVE cluster, if a Virtual IP is available on the different hypervisor constituing this PVE cluster, this would be more robust to use it instead of the one of a particular hypervisor.
 - the token user, token name and token value are to be fetched from the token we just
@@ -172,11 +173,11 @@ In the previous output:
 
 ```
 (.env) root@vbmc:~/proxmoxbmc# pbmc list
-+------+--------+---------+------+
-| VMID | Status | Address | Port |
-+------+--------+---------+------+
-| 113  | down   | ::      | 9001 |
-+------+--------+---------+------+
++------+--------+--------------+------+
+| VMID | Status | Address      | Port |
++------+--------+--------------+------+
+| 113  | down   | 10.13.30.253 |  623 |
++------+--------+--------------+------+
 (.env) root@vbmc:~/proxmoxbmc#
 ```
 
@@ -187,11 +188,11 @@ must first start it:
 ```
 (.env) root@vbmc:~/proxmoxbmc# pbmc start 113
 (.env) root@vbmc:~/proxmoxbmc# pbmc list
-+------+---------+---------+------+
-| VMID | Status  | Address | Port |
-+------+---------+---------+------+
-| 113  | running | ::      | 9001 |
-+------+---------+---------+------+
++------+---------+--------------+------+
+| VMID | Status  | Address      | Port |
++------+---------+--------------+------+
+| 113  | running | 10.13.30.253 |  623 |
++------+---------+--------------+------+
 (.env) root@vbmc:~/proxmoxbmc#
 ```
 
