@@ -8,15 +8,15 @@
 VirtualBMC which was active on Openstack.
 
 In turn *Proxmoxbmc* relies on [proxmoxer](https://github.com/proxmoxer/proxmoxer) which
-is a wrapper of the Proxmox Virtual Environment (PVE for short) REST API to Python language.
+is a wrapper of the Proxmox Virtual Environment (PVE in the following) REST API for the Python language.
 
 ## Architecture consideration
 
 As the fundation is the PVE REST API, it's only necessary to install *proxmoxer* and *proxmoxbmc* on
 a single node that has access, on one side, to all the PVE hypervisor, and on the other side
-is accessible from HPCM node(s).
+is accessible from HPCM and the eventual SU_leader(s) node(s).
 
-Here the *node* will be a VM, of course.
+Here the *node* means a VM, of course.
 
 From HPCM point of view, the vBMC node should be reachable through the head-bmc network
 
@@ -46,7 +46,7 @@ apt-get install python3-proxmoxer
 
 ### Installation
 
-We will stick to Debian OS to install proxmoxbmc and follow the short doc provided to install *proxmoxbmc*:
+We will stick to Debian OS to install *proxmoxbmc* and follow the short doc provided for its installation:
 
 ```
    apt-get install python3-pip python3-venv git -y
