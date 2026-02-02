@@ -196,6 +196,50 @@ must first start it:
 (.env) root@vbmc:~/proxmoxbmc#
 ```
 
+### Testing using ipmitool
+
+on the HPCM admin node, let's install *ipmitool*:
+
+```
+dnf install ipmitool -y
+```
+
+Now let's check the power status of the VM 113
+```
+[root@hpcm1 ~]# ipmitool -I lanplus -U admin -P password -H 10.13.30.253 power status
+Chassis Power is off
+[root@hpcm1 ~]#
+```
+
+And this is coherent with the current status as displayed from the proxmox GUI:
+
+![initial VM status](../resources/ipmi-1.png)
+
+Now, let's power on the VM 113:
+
+```
+[root@hpcm1 ~]# ipmitool -I lanplus -U admin -P password -H 10.13.30.253 power on
+Chassis Power Control: Up/On
+[root@hpcm1 ~]# ipmitool -I lanplus -U admin -P password -H 10.13.30.253 power status
+Chassis Power is on
+[root@hpcm1 ~]#
+```
+
+let's check this is coherent with the proxmox GUI:
+
+![VM now powered on](../resources/ipmi-2.png)
+
+
+And it is! The VM 113 is really now powered on!
+
+Conclusion:
+
+We now have an VM with a BMC implemented as a virtual machine running the pbmcd daemon,
+thanks to the proxmoxbmc software. As proxmoxbmc is able to provide a virtual BMC for
+many VMs, we now need a way to either:
+- find how HPCM can communicate with a BMC with anohter port than UDP 623
+- find a way for the vBMC shows to HPCM as many independent BMC all listening on port UDP 623
+
 
 ## Updating HPCM
 
