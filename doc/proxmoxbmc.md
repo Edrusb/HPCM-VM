@@ -10,19 +10,19 @@ VirtualBMC which was active on Openstack.
 *Proxmoxbmc* relies on [proxmoxer](https://github.com/proxmoxer/proxmoxer) which
 is a wrapper of the Proxmox Virtual Environment (PVE in the following) REST API for the Python language.
 
-This page describes how to setup and use ProxmoxBMC, this is split in difference phases:
+This page describes how to setup and use *Proxmoxbmc* and follows this structure:
 - Architecture consideration
 - Proxmoxer installation
 - Proxmoxbmc
-  - installation
-  - manual execution
-  - integration with systemd
+  - Installation
+  - Manual execution
+  - Integration with systemd
 - Proxmoxbmc to PVE authentication
-  - adding PVE role
-  - creating a token
-  - assigning role to token
+  - Adding a new PVE role
+  - Creating an API token
+  - Assigning role to the token
 - Proxmoxbmc configuration with PVE
-- Proxmoxbmc testing
+- Proxmoxbmc IPMI testing
 - Conclusion
 
 ## Architecture consideration
@@ -83,7 +83,7 @@ We will stick to the Debian OS to install *proxmoxbmc* following the short doc p
 >   python -m setup install
 >
 
-### Running the *pbmcd* daemon
+### Manual execution
 
 Proxmoxbmc relies an a daemon, named **pbmcd** we can run manually this way:
 
@@ -94,7 +94,7 @@ Proxmoxbmc relies an a daemon, named **pbmcd** we can run manually this way:
    (.env) root@vbmc:~/proxmoxbmc#
 ```
 
-### Automatic launch of *pbmcd*
+### Integration with systemd
 
 As this *pbmcd* daemon should be fired each time the VM boots, it would be
 better to have the init process (the horrible octopus *systemctl* under Debian) doing
@@ -144,11 +144,10 @@ janv. 23 12:21:10 vbmc pbmcd[909]: 2026-01-23 12:21:10,222 909 INFO ProxmoxBMC [
 root@vbmc:~#
 ```
 
-## Proxmox VE authentication
+## Proxmoxbmc to PVE authentication
 
 Proxmoxbmc will have to access PVE API to realize the operations it will receive through IPMI. This means
-to authenticate to the proxmox cluster API,
-for which *Proxmox* provides **tokens**.
+to authenticate to the Proxmox cluster API. This authentication relies **tokens**.
 
 The principle is to:
 - create a role and give it a set of privileges
@@ -171,7 +170,7 @@ Check that the proper privileges have been assigned to the role. You should see 
 
 ![PVE role configuration](../pictures/role-config-check.png)
 
-### Adding a new API Token
+### Creating an API Token
 
 Then go to the menu ```Datacenter | Permissions | API Tokens```and add a new token
 checking the box ```privilege separation```[^1]:
@@ -183,7 +182,7 @@ show again (you would be good to delete this token an create a new one in case o
 
 ![token secret](../pictures/token-value.png)
 
-### Give permissions to the token
+### Assigning role to the token
 
 Last with Proxmox authentication, after having created:
 - a bmc-role
@@ -209,7 +208,7 @@ not be very secured!!! One could also create a dedicated user for the *proxmoxbm
 restricted privileged and associate the token to this account without *privilege separation*...
 
 
-## Proxmoxbmc Configuration
+## Proxmoxbmc Configuration with PVE
 
 To provide a BMC feature to a given VM the *pbmcd* daemon must also be configured.
 This is done using the **pbmc** command, which is available in the venv where proxmoxer
@@ -262,9 +261,9 @@ must first start it:
 The running status of a BMC service is maintained when *proxmoxbmc* is restarted, so we
 will not have to redo it in the future.
 
-## Testing the BMC using ipmitool
+## Proxmox IPMI testing
 
-on the HPCM admin node, let's install *ipmitool*:
+On the HPCM admin node, let's install *ipmitool*:
 
 >
 > dnf install ipmitool -y
