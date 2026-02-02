@@ -10,6 +10,21 @@ VirtualBMC which was active on Openstack.
 *Proxmoxbmc* relies on [proxmoxer](https://github.com/proxmoxer/proxmoxer) which
 is a wrapper of the Proxmox Virtual Environment (PVE in the following) REST API for the Python language.
 
+This page describes how to setup and use ProxmoxBMC, this is split in difference phases:
+- Architecture consideration
+- Proxmoxer installation
+- Proxmoxbmc
+  - installation
+  - manual execution
+  - integration with systemd
+- Proxmoxbmc to PVE authentication
+  - adding PVE role
+  - creating a token
+  - assigning role to token
+- Proxmoxbmc configuration with PVE
+- Proxmoxbmc testing
+- Conclusion
+
 ## Architecture consideration
 
 As the fundation is the PVE REST API, it's only necessary to install *proxmoxer* and *proxmoxbmc* on
@@ -20,7 +35,7 @@ Here *node* means *VM*, of course.
 
 From HPCM point of view, the vBMC node should be reachable through the head-bmc network
 
-## Proxmoxer
+## Proxmoxer installation
 
 We just have to install it, no daemon to run:
 
@@ -283,7 +298,7 @@ let's check the result retured by *imptool* is coherent with the proxmox GUI:
 
 And it is! The VM 113 is now really powered on!
 
-### Conclusion of Proxmoxbmc installation
+## Conclusion
 
 We now have an VM with a BMC implemented as a virtual machine running the *pbmcd* daemon,
 thanks to the *proxmoxbmc* software. But as *proxmoxbmc* is able to provide a virtual BMC for
@@ -291,20 +306,5 @@ many VMs, we now need to find a way to either:
 - find how HPCM can communicate with a BMC using another port than the default UDP 623 port for IPMI
 - find a way for the vBMC to show to HPCM as many independent BMCs, all listening on port UDP 623
 
-## Updating HPCM
-
-we can now add the BMC parameter to the compute03 node in HPCM
-
----- TO BE CONTINUED ----
-
-cm node set --bmc-password password --bmc-username admin -n compute03
-cm node set --conserver-logging yes -n compute03
-
-
-
-
-
-
-
-| [Prev](console-on-seiral.md) | [top](../README.md)   |                        --- |
-|:-----------------------------|:---------------------:|---------------------------:|
+| [Prev](console-on-seiral.md) | [top](../README.md)   |  [Next](../hpcm-proxmoxbmc.md) |
+|:-----------------------------|:---------------------:|-------------------------------:|
