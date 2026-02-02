@@ -133,7 +133,14 @@ root@vbmc:~#
 
 Proxmoxbmc will have to access PVE API to realize the operation it received through IPMI. This means also
 to authenticate to the proxmox cluster API,
-which for *Proxmox* provides authentication by mean of **tokens**.
+for which *Proxmox* provides **tokens**.
+
+The principle is to:
+- create a role and give it a set of permissions
+- create a token
+- associate the token to the role
+
+### Adding a new PVE role
 
 First, we define a **role** having access to **at least** the following rights:
 - VM.PowerMgmt (power on/off the VM)
@@ -149,6 +156,8 @@ Check that the proper definitions have been assigned to the role, you should see
 
 ![PVE role configuration](../pictures/role-config-check.png)
 
+### Adding a new API Token
+
 Then go to the menu ```Datacenter | Permissions | API Tokens```and add a new token
 checking the box ```privilege separation```[^1]:
 
@@ -159,17 +168,21 @@ show again (you'll be good to delete this token an create a new one in case of l
 
 ![token secret](../pictures/token-value.png)
 
-Last with Proxmox authentication, after having create:
-- a bmc-role
-- a API token
+### Give permissions to the token
 
-We must now assign the bmc-role to the token we have created for it has some permission, since
-we checked the *privilege separation*[^1] box when creating the token:
+Last with Proxmox authentication, after having created:
+- a bmc-role
+- an API token
+
+We must now assign the *bmc-role* to the token we have created for it has some permission, since
+we checked the *privilege separation*[^1] box when creating the token. For that go to the
+```Datacenter | Permissions``` menu and add a permission as described here:
 
 ![token permission](../pictures/token-permission.png)
 
 > [!Note]
-> The *Path* can be used in option to restict the permission to certains objects (VM or pool of VM for example)
+> The *Path* (here above set as */*) can be used in option to restict the permission to
+> certains objects (VM or pool of VM for example)
 > One could organize the VM to be managed by proxmoxer under a proxmox *pool* named *HPCM*
 > and only allow the token to act on objects of that pool, by specifying the *Path* equal
 > to */pool/HPCM* for example
