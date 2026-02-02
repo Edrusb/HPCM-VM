@@ -174,7 +174,7 @@ we checked the *privilege separation*[^1] box when creating the token:
 > and only allow the token to act on objects of that pool, by specifying the *Path* equal
 > to */pool/HPCM* for example
 
-[^1:] Checking the box ```privilege separation``` means that this token has not been assigned
+[^1]: Checking the box ```privilege separation``` means that this token has not been assigned
 any privilege (privilege separated from the user account it has been created on). If unchecked
 the token would have the privileges of the user it has been created for, here *root* which would
 not be very secured!!! One could also create a dedicated user for the *proxmoxbmc* software, with
