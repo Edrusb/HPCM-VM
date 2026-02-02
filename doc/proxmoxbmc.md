@@ -144,6 +144,9 @@ Go to menu ```Datacenter | Permissions | Roles``` and add a new role as illustra
 
 ![PVE role definition](../pictures/role-definition.png)
 
+Check the proper definition of the role, which should **at least** receive the following rights:
+
+![PVE role configuration](../picture/role-config-check.png)
 
 Then go to the menu ```Datacenter | Permissions | API Tokens```and add a new token
 checking the box ```privilege separation```:
