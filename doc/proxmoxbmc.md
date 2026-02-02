@@ -4,10 +4,10 @@
 
 ## Presentation
 
-[Proxmoxbmc](https://github.com/agnon/proxmoxbmc) is a project that inherits from
+[Proxmoxbmc](https://github.com/agnon/proxmoxbmc) is a project inheriting from
 VirtualBMC which was active on Openstack.
 
-In turn *Proxmoxbmc* relies on [proxmoxer](https://github.com/proxmoxer/proxmoxer) which
+*Proxmoxbmc* relies on [proxmoxer](https://github.com/proxmoxer/proxmoxer) which
 is a wrapper of the Proxmox Virtual Environment (PVE in the following) REST API for the Python language.
 
 ## Architecture consideration
@@ -16,7 +16,7 @@ As the fundation is the PVE REST API, it's only necessary to install *proxmoxer*
 a single node that has access, on one side, to all the PVE hypervisor, and on the other side
 is accessible from HPCM and the eventual SU_leader(s) node(s).
 
-Here the *node* means a VM, of course.
+Here *node* means *VM*, of course.
 
 From HPCM point of view, the vBMC node should be reachable through the head-bmc network
 
@@ -24,42 +24,39 @@ From HPCM point of view, the vBMC node should be reachable through the head-bmc 
 
 We just have to install it, no daemon to run:
 
-```
-pip install proxmoxer
+>
+> pip install proxmoxer
+> pip install requests
+> pip install paramiko
+> pip install openssh_wrapper
+>
 
-pip install requests
+As an alternative, Debian provides a package. Using the official distributions is more secured than replying
+on PyPI so you should prefer this if you chose Debian as the OS of the vBMC node:
 
-pip install paramiko
-
-pop install openssh_wrapper
-```
-
-Debian provides packages from the official distributions which is more secured than replying
-on PyPI:
-
-```
-apt-get install python3-proxmoxer
-```
+>
+> apt-get install python3-proxmoxer
+>
 
 
 ## Proxmoxbmc
 
 ### Installation
 
-We will stick to Debian OS to install *proxmoxbmc* and follow the short doc provided for its installation:
+We will stick to the Debian OS to install *proxmoxbmc* following the short doc provided for its installation:
 
-```
-   apt-get install python3-pip python3-venv git -y
-
-   apt-get update && apt-get install python3-pip python3-venv
-   cd ~
-   git clone https://github.com/agnon/proxmoxbmc.git
-   cd proxmoxbmc
-   python3 -m venv .env
-   source .env/bin/activate
-   pip install -r requirements.txt
-   python -m setup install
-```
+>
+>   apt-get install python3-pip python3-venv git -y
+>
+>   apt-get update && apt-get install python3-pip python3-venv
+>   cd ~
+>   git clone https://github.com/agnon/proxmoxbmc.git
+>   cd proxmoxbmc
+>   python3 -m venv .env
+>   source .env/bin/activate
+>   pip install -r requirements.txt
+>   python -m setup install
+>
 
 ### Running the *pbmcd* daemon
 
@@ -73,11 +70,12 @@ Proxmoxbmc relies an a daemon, named **pbmcd** we can run manually this way:
 
 ### Automatic launch of *pbmcd*
 
-A this *pbmcd* daemn should be fired each time the VM boots, we have to
-create a systemctl service:
+As this *pbmcd* daemn should be fired each time the VM boots, it would be 
+better to have the init process (the ugly octopus *systemctl* under Debian) doing
+that for us:
 
 ```
-cat > /etc/systemd/system/pbmcd.service <<EOF
+root@vbmc:~# cat > /etc/systemd/system/pbmcd.service <<EOF
 [Unit]
 Description = pbmcd service
 After = syslog.target
@@ -94,14 +92,15 @@ q
 WantedBy = multi-user.target
 
 EOF
+root@vbmc:~#
 ```
 
 then we can activate the service with:
 ```
-systemctl enable --now pbcmd
+root@vbmc:~# systemctl enable --now pbmcd
 ```
 
-check the service is running as expected:
+Let's check the service is running as expected:
 ```
 root@vbmc:~# systemctl status pbmcd
 ● pbmcd.service - pbmcd service
@@ -121,7 +120,8 @@ root@vbmc:~#
 
 ## Proxmox VE authentication
 
-To access PVE API we need to authenticate with a token. This has to be created first.
+Proxmoxbmc will have to access PVE API to realize the operation it received through IPMI. it this needs to authenticate to the proxmox cluster, 
+which for API calls provides authentication by mean of tokens. Thus let's created a token:
 
 First, we define a role having access to the:
 - VM Power managment
