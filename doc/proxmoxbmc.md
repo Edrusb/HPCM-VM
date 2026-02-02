@@ -283,7 +283,7 @@ let's check the result retured by *imptool* is coherent with the proxmox GUI:
 
 And it is! The VM 113 is now really powered on!
 
-### Conclusion
+### Conclusion of Proxmoxbmc installation
 
 We now have an VM with a BMC implemented as a virtual machine running the *pbmcd* daemon,
 thanks to the *proxmoxbmc* software. But as *proxmoxbmc* is able to provide a virtual BMC for
