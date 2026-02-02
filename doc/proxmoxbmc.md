@@ -290,7 +290,7 @@ Chassis Power is on
 [root@hpcm1 ~]#
 ```
 
-let's check the result retured by *imptool* is coherent with the proxmox GUI:
+let's check the result retured by *ipmitool* is coherent with the proxmox GUI:
 
 ![VM now powered on](../pictures/ipmi-2.png)
 
