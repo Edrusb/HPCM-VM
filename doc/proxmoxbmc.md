@@ -131,12 +131,12 @@ root@vbmc:~#
 
 ## Proxmox VE authentication
 
-Proxmoxbmc will have to access PVE API to realize the operation it received through IPMI. This means also
+Proxmoxbmc will have to access PVE API to realize the operations it will receive through IPMI. This means
 to authenticate to the proxmox cluster API,
 for which *Proxmox* provides **tokens**.
 
 The principle is to:
-- create a role and give it a set of permissions
+- create a role and give it a set of privileges
 - create a token
 - associate the token to the role
 
@@ -152,7 +152,7 @@ Go to menu ```Datacenter | Permissions | Roles``` and add a new role as illustra
 
 ![PVE role definition](../pictures/role-definition.png)
 
-Check that the proper definitions have been assigned to the role, you should see at least the following ones:
+Check that the proper privileges have been assigned to the role. You should see at least the following ones:
 
 ![PVE role configuration](../pictures/role-config-check.png)
 
@@ -164,7 +164,7 @@ checking the box ```privilege separation```[^1]:
 ![token creation](../pictures/token-definition.png)
 
 Once validated, a new window displays the API token secret. Copy it in a secured place, it will not
-show again (you'll be good to delete this token an create a new one in case of loss).
+show again (you would be good to delete this token an create a new one in case of loss).
 
 ![token secret](../pictures/token-value.png)
 
@@ -174,18 +174,18 @@ Last with Proxmox authentication, after having created:
 - a bmc-role
 - an API token
 
-We must now assign the *bmc-role* to the token we have created for it has some permission, since
+We must now assign the *bmc-role* to the token we have created, for it receives some privileges, since
 we checked the *privilege separation*[^1] box when creating the token. For that go to the
-```Datacenter | Permissions``` menu and add a permission as described here:
+```Datacenter | Permissions``` menu and *Add an API Token permission* as described here:
 
 ![token permission](../pictures/token-permission.png)
 
 > [!Note]
-> The *Path* (here above set as */*) can be used in option to restict the permission to
-> certains objects (VM or pool of VM for example)
-> One could organize the VM to be managed by proxmoxer under a proxmox *pool* named *HPCM*
+> The *Path* (here above set to */*) can be used in option to restict the permission to
+> certains objects (VM or pool of VM for example).
+> One could organize all the VMs to be managed by proxmoxer to be set to a Proxmox *pool* named *HPCM*
 > and only allow the token to act on objects of that pool, by specifying the *Path* equal
-> to */pool/HPCM* for example
+> to */pool/HPCM*.
 
 [^1]: Checking the box ```privilege separation``` means that this token has not been assigned
 any privilege (privilege separated from the user account it has been created on). If unchecked
