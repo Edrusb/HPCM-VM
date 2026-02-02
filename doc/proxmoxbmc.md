@@ -149,7 +149,7 @@ Check the proper definition of the role, which should **at least** receive the f
 ![PVE role configuration](../pictures/role-config-check.png)
 
 Then go to the menu ```Datacenter | Permissions | API Tokens```and add a new token
-checking the box ```privilege separation```:
+checking the box ```privilege separation```[^1]:
 
 ![token creation](../pictures/token-definition.png)
 
@@ -163,6 +163,12 @@ any privilege (privilege separated from the user account it has been created on)
 thus here assigne the role we defined earlier to the token we just created:
 
 ![token permission](../pictures/token-permission.png)
+
+[^1:] Checking the box ```privilege separation``` means that this token has not been assigned
+any privilege (privilege separated from the user account it has been created on). If unchecked
+the token would have the privileges of the user it has been created for, here *root* which would
+not be very secured!!! One could also create a dedicated user for the *proxmoxbmc* software, with
+restricted privileged and associate the token to this account without *privilege separation*...
 
 
 ## Proxmoxbmc Configuration
