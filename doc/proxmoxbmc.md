@@ -81,7 +81,7 @@ Proxmoxbmc relies an a daemon, named **pbmcd** we can run manually this way:
 
 ### Automatic launch of *pbmcd*
 
-As this *pbmcd* daemn should be fired each time the VM boots, it would be 
+As this *pbmcd* daemon should be fired each time the VM boots, it would be
 better to have the init process (the horrible octopus *systemctl* under Debian) doing
 that for us:
 
@@ -131,10 +131,11 @@ root@vbmc:~#
 
 ## Proxmox VE authentication
 
-Proxmoxbmc will have to access PVE API to realize the operation it received through IPMI. it this needs to authenticate to the proxmox cluster, 
-which for API calls provides authentication by mean of tokens. Thus let's created a token:
+Proxmoxbmc will have to access PVE API to realize the operation it received through IPMI. This means also
+to authenticate to the proxmox cluster API,
+which for *Proxmox* provides authentication by mean of **tokens**.
 
-First, we define a role having access **at least** to the following rights:
+First, we define a **role** having access to **at least** the following rights:
 - VM.PowerMgmt (power on/off the VM)
 - VM.Console (access the OS from the BMC)
 - VM.Audit (read the VM status)
@@ -144,7 +145,7 @@ Go to menu ```Datacenter | Permissions | Roles``` and add a new role as illustra
 
 ![PVE role definition](../pictures/role-definition.png)
 
-Check the proper definition of the role, which should **at least** receive the following rights:
+Check that the proper definitions have been assigned to the role, you should see at least the following ones:
 
 ![PVE role configuration](../pictures/role-config-check.png)
 
@@ -153,16 +154,25 @@ checking the box ```privilege separation```[^1]:
 
 ![token creation](../pictures/token-definition.png)
 
-Once validated, a new window show the token secret, copy it in a secured place, it will not
+Once validated, a new window displays the API token secret. Copy it in a secured place, it will not
 show again (you'll be good to delete this token an create a new one in case of loss).
 
 ![token secret](../pictures/token-value.png)
 
-Checking the box ```privilege separation``` means that this token has not been assigned
-any privilege (privilege separated from the user account it has been created on). We must
-thus here assigne the role we defined earlier to the token we just created:
+Last with Proxmox authentication, after having create:
+- a bmc-role
+- a API token
+
+We must now assign the bmc-role to the token we have created for it has some permission, since
+we checked the *privilege separation*[^1] box when creating the token:
 
 ![token permission](../pictures/token-permission.png)
+
+> [!Note]
+> The *Path* can be used in option to restict the permission to certains objects (VM or pool of VM for example)
+> One could organize the VM to be managed by proxmoxer under a proxmox *pool* named *HPCM*
+> and only allow the token to act on objects of that pool, by specifying the *Path* equal
+> to */pool/HPCM* for example
 
 [^1:] Checking the box ```privilege separation``` means that this token has not been assigned
 any privilege (privilege separated from the user account it has been created on). If unchecked
