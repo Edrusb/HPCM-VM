@@ -134,10 +134,11 @@ root@vbmc:~#
 Proxmoxbmc will have to access PVE API to realize the operation it received through IPMI. it this needs to authenticate to the proxmox cluster, 
 which for API calls provides authentication by mean of tokens. Thus let's created a token:
 
-First, we define a role having access to the:
-- VM Power managment
-- VM console
-- VM Monitoring
+First, we define a role having access **at least** to the following rights:
+- VM.PowerMgmt (power on/off the VM)
+- VM.Console (access the OS from the BMC)
+- VM.Audit (read the VM status)
+- VM.Options (changing boot PXE/Disk...)
 
 Go to menu ```Datacenter | Permissions | Roles``` and add a new role as illustrated below:
 
