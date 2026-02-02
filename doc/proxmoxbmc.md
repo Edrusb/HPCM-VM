@@ -196,24 +196,28 @@ restricted privileged and associate the token to this account without *privilege
 
 ## Proxmoxbmc Configuration
 
-To a give a BMC feature to a given VM the *pbmcd* daemon must also be configured.
-This is done in the save virtuel environement (venv) using the **pbmc** command (still in
-the venv):
+To provide a BMC feature to a given VM the *pbmcd* daemon must also be configured.
+This is done using the **pbmc** command, which is available in the venv where proxmoxer
+has been installed previously:
 
 ```
-cd ~/proxmoxbmc
-source .env/bin/activate
+root@vbmc:~# cd ~/proxmoxbmc
+root@vbmc:~# source .env/bin/activate
 (.env) root@vbmc:~/proxmoxbmc# pbmc add --username admin --password password --port 623 --address 10.13.30.253 --proxmox-address proxmox-6.ezmeral.edrusb.org --token-user root@pam --token-name vbmc-token --token-value xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx 113
-````
+```
 
 In the previous output:
-- we assigned TCP port 623 to the BMC of the compute03 we created for HPCM PXE boot. This
+- we assigned TCP port 623 to the BMC of the compute03 we had created for HPCM PXE boot earlier. This
   VM has a VMID of 113, where from the last argument on the command-line
 - the --address is necessary and should point to an IP addres of the vBMC (else the service listens on the loopback interface of the VM and will not be reachable by HPCM)
-- the username and password are the one to use to connect to the virtual BMC service on this port
-- the proxmox-address is the hostname/IP address of one of the hypervisor of the PVE cluster, if a Virtual IP is available on the different hypervisor constituing this PVE cluster, this would be more robust to use it instead of the one of a particular hypervisor.
-- the token user, token name and token value are to be fetched from the token we just
+- the username and password are the one to use to connect to the virtual BMC service on this port. HPCM will need them to authenticate to the vBMC.
+- the proxmox-address is the hostname/IP address of one of the hypervisor of the PVE cluster. If a Virtual IP is available over the different hypervisors
+  constituing this PVE cluster, this would be more robust to use it, instead of the one of a particular hypervisor of the cluster.
+- the token-user, token-name and token value are to be fetched from the token we just
   created above.
+
+
+Now, let's check the status of our first BMC service:
 
 ```
 (.env) root@vbmc:~/proxmoxbmc# pbmc list
@@ -225,8 +229,8 @@ In the previous output:
 (.env) root@vbmc:~/proxmoxbmc#
 ```
 
-in the previous output we see our virtual BMC for the VM which ID is 113.
-The status ```down``` is not those of the VM but of the virtual BMC, so we
+in the previous output we see our virtual BMC for the VM which ID is 113 (compute03 VM).
+The status ```down``` is not those of the VM but of the virtual BMC service, so we
 must first start it:
 
 ```
@@ -240,13 +244,16 @@ must first start it:
 (.env) root@vbmc:~/proxmoxbmc#
 ```
 
-### Testing using ipmitool
+The running status of a BMC service is maintained when *proxmoxbmc* is restarted, so we
+will not have to redo it in the future.
+
+## Testing the BMC using ipmitool
 
 on the HPCM admin node, let's install *ipmitool*:
 
-```
-dnf install ipmitool -y
-```
+>
+> dnf install ipmitool -y
+>
 
 Now let's check the power status of the VM 113
 ```
@@ -257,7 +264,7 @@ Chassis Power is off
 
 And this is coherent with the current status as displayed from the proxmox GUI:
 
-![initial VM status](../resources/ipmi-1.png)
+![initial VM status](../pictures/ipmi-1.png)
 
 Now, let's power on the VM 113:
 
@@ -269,21 +276,20 @@ Chassis Power is on
 [root@hpcm1 ~]#
 ```
 
-let's check this is coherent with the proxmox GUI:
+let's check the result retured by *imptool* is coherent with the proxmox GUI:
 
-![VM now powered on](../resources/ipmi-2.png)
+![VM now powered on](../pictures/ipmi-2.png)
 
 
-And it is! The VM 113 is really now powered on!
+And it is! The VM 113 is now really powered on!
 
-Conclusion:
+### Conclusion
 
-We now have an VM with a BMC implemented as a virtual machine running the pbmcd daemon,
-thanks to the proxmoxbmc software. As proxmoxbmc is able to provide a virtual BMC for
-many VMs, we now need a way to either:
-- find how HPCM can communicate with a BMC with anohter port than UDP 623
-- find a way for the vBMC shows to HPCM as many independent BMC all listening on port UDP 623
-
+We now have an VM with a BMC implemented as a virtual machine running the *pbmcd* daemon,
+thanks to the *proxmoxbmc* software. But as *proxmoxbmc* is able to provide a virtual BMC for
+many VMs, we now need to find a way to either:
+- find how HPCM can communicate with a BMC using another port than the default UDP 623 port for IPMI
+- find a way for the vBMC to show to HPCM as many independent BMCs, all listening on port UDP 623
 
 ## Updating HPCM
 
