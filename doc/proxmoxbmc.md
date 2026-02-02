@@ -26,8 +26,11 @@ We just have to install it, no daemon to run:
 
 >
 > pip install proxmoxer
+>
 > pip install requests
+>
 > pip install paramiko
+>
 > pip install openssh_wrapper
 >
 
@@ -49,12 +52,19 @@ We will stick to the Debian OS to install *proxmoxbmc* following the short doc p
 >   apt-get install python3-pip python3-venv git -y
 >
 >   apt-get update && apt-get install python3-pip python3-venv
+>
 >   cd ~
+>
 >   git clone https://github.com/agnon/proxmoxbmc.git
+>
 >   cd proxmoxbmc
+>
 >   python3 -m venv .env
+>
 >   source .env/bin/activate
+>
 >   pip install -r requirements.txt
+>
 >   python -m setup install
 >
 
@@ -63,15 +73,16 @@ We will stick to the Debian OS to install *proxmoxbmc* following the short doc p
 Proxmoxbmc relies an a daemon, named **pbmcd** we can run manually this way:
 
 ```
-   cd ~/proxmoxbmc
-   source .env/bin/activate
-   pbmcd # starts the server
+   root@vbmc:~# cd ~/proxmoxbmc
+   root@vbmc:~/proxmoxbmc# source .env/bin/activate
+   (.env) root@vbmc:~/proxmoxbmc# pbmcd
+   (.env) root@vbmc:~/proxmoxbmc#
 ```
 
 ### Automatic launch of *pbmcd*
 
 As this *pbmcd* daemn should be fired each time the VM boots, it would be 
-better to have the init process (the ugly octopus *systemctl* under Debian) doing
+better to have the init process (the horrible octopus *systemctl* under Debian) doing
 that for us:
 
 ```
