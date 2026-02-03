@@ -223,7 +223,7 @@ root@vbmc:~# source .env/bin/activate
 In the previous output:
 - we assigned TCP port 623 to the BMC of the compute03 we had created for HPCM PXE boot earlier. This
   VM has a VMID of 113, where from the last argument on the command-line
-- the --address is necessary and should point to an IP addres of the vBMC (else the service listens on the loopback interface of the VM and will not be reachable by HPCM)
+- the --address is *not* necessary, it restricts the interfaces on which the BMC will be reachable (by default vBMC is reachable by all interfaces)
 - the username and password are the one to use to connect to the virtual BMC service on this port. HPCM will need them to authenticate to the vBMC.
 - the proxmox-address is the hostname/IP address of one of the hypervisor of the PVE cluster. If a Virtual IP is available over the different hypervisors
   constituing this PVE cluster, this would be more robust to use it, instead of the one of a particular hypervisor of the cluster.
