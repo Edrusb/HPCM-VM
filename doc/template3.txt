@@ -1,3 +1,0 @@
-[templates]
-name=vm, mgmt_bmc_net_name=head-bmc, mgmt_net_name=head, mgmt_net_bonding_master=bond0, mgmt_net_bonding_mode=active-backup,  mgmt_net_interfaces="ens18,ens19", data1_net_name=hsn, rootfs=nfs, diskless_writable_type=tmpfs-overlay, transport=bt, conserver_logging=yes, conserver_ondemand=no, dhcp_bootfile=ipxe-direct, disk_bootloader=no, predictable_net_names=yes, redundant_mgmt_network=yes, switch_mgmt_network=no, tpm_boot=no, console_device=ttyS0, architecture=x86_64, card_type="IPMI", image=rocky8.10, kernel=4.18.0-553.el8_10.x86_64, baud_rate=default, bmc_username=admin, bmc_password=password
-

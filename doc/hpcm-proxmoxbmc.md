@@ -331,7 +331,9 @@ assigned on the new nodes, this has to be done in complement:
 
 >
 > cm node nic add -w hsn -N ens20 -c hsn -n compute01 --compute-next-ip -m bc:24:11:59:94:d3
+>
 > cm node nic add -w hsn -N ens20 -c hsn -n compute02 --compute-next-ip -m BC:24:11:47:98:E3
+>
 > cm node nic add -w hsn -N ens20 -c hsn -n compute04 --compute-next-ip -m BC:24:11:75:A8:2A
 >
 
