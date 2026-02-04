@@ -314,7 +314,6 @@ Let's see the final stage:
 
 ```
 [root@hpcm1 Documents]# cm power status -t system
-gateway: FAILURE: Node is OFFLINE in database
 compute01    : BOOTED
 compute02    : BOOTED
 compute03    : BOOTED
