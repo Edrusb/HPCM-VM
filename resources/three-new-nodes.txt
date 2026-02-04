@@ -1,0 +1,4 @@
+[discover]
+hostname1=compute01, internal_name=service01, template_name=vm, mgmt_bmc_net_macs="bc:24:11:8c:71:9a", mgmt_bmc_net_ip=10.25.255.250, mgmt_net_macs="BC:24:11:6F:E8:3C,BC:24:11:EF:BE:AA", data1_net_macs="BC:24:11:59:94:D3" 
+hostname1=compute02, internal_name=service02, template_name=vm, mgmt_bmc_net_macs="bc:24:11:8c:71:9a", mgmt_bmc_net_ip=10.25.255.251, mgmt_net_macs="BC:24:11:19:4A:18,BC:24:11:D4:0E:6F", data1_net_macs="BC:24:11:47:98:E3" 
+hostname1=compute04, internal_name=service04, template_name=vm, mgmt_bmc_net_macs="bc:24:11:8c:71:9a", mgmt_bmc_net_ip=10.25.255.252, mgmt_net_macs="BC:24:11:93:5D:63,BC:24:11:36:46:DA", data1_net_macs="BC:24:11:75:A8:2A" 
