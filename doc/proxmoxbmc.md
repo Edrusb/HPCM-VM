@@ -305,5 +305,5 @@ many VMs, we now need to find a way to either:
 - find how HPCM can communicate with a BMC using another port than the default UDP 623 port for IPMI
 - find a way for the vBMC to show to HPCM as many independent BMCs, all listening on port UDP 623
 
-| [Prev](console-on-seiral.md) | [top](../README.md)   |  [Next](../hpcm-proxmoxbmc.md) |
-|:-----------------------------|:---------------------:|-------------------------------:|
+| [Prev](console-on-seiral.md) | [top](../README.md)   |  [Next](hpcm-proxmoxbmc.md) |
+|:-----------------------------|:---------------------:|----------------------------:|
