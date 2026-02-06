@@ -391,13 +391,13 @@ class vbmcbase:
         self._check_initialized()
 
         # adding a new IP address
-        print("ip addr add {}/{} dev {}".format(self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].masklen, self.net_dev))
+        os.system("ip addr add {}/{} dev {}".format(self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].masklen, self.net_dev))
 
         # adding an iptable rule
-        print("iptables -t nat -A PREROUTING -i {} -p udp --dport 623 -d {} -j REDIRECT --to-ports {}".format(self.net_dev, self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].udp_port))
+        os.system("iptables -t nat -A PREROUTING -i {} -p udp --dport 623 -d {} -j REDIRECT --to-ports {}".format(self.net_dev, self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].udp_port))
 
         # adding a new bmc
-        print("""source {} 2> /dev/null || . {} 2> /dev/null ; pbmc add --username {} --password {} --port {} --proxmox-address {}
+        os.system("""source {} 2> /dev/null || . {} 2> /dev/null ; pbmc add --username {} --password {} --port {} --proxmox-address {}
                  --token-user {} --token-name {} --token-value {} {}
               """.format(self.venv_path, self.venv_path, self.bmc_login, self.bmc_pass, self.vbmcs[vmid].udp_port, self.proxmox_ip, self.api_user, self.token_name, self.token_secret, vmid))
 
@@ -411,13 +411,13 @@ class vbmcbase:
         self._check_initialized()
 
         # removing the vBMC instance
-        print("source {} 2> /dev/null || . {} 2> /dev/null ; pbmc del {}".format(self.venv_path, self.venv_path, vmid))
+        os.system("source {} 2> /dev/null || . {} 2> /dev/null ; pbmc del {}".format(self.venv_path, self.venv_path, vmid))
 
         # removing iptable rule
-        print("iptables -t nat -D PREROUTING -i {} -p udp --dport 623 -d {} -j REDIRECT --to-ports {}".format(self.net_dev, self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].udp_port))
+        os.system("iptables -t nat -D PREROUTING -i {} -p udp --dport 623 -d {} -j REDIRECT --to-ports {}".format(self.net_dev, self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].udp_port))
 
         # removing the extra IP
-        print("ip addr del {}/{} dev {}".format(self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].masklen, self.net_dev))
+        os.system("ip addr del {}/{} dev {}".format(self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].masklen, self.net_dev))
 
 
     def _has_vmid(self, vmid):
