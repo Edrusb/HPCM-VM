@@ -8,6 +8,15 @@ import os
 # local error raise ValueError exception
 #
 
+DEBUG = False
+
+def os_system(cmd):
+    if DEBUG:
+        print("would execute: {}".format(cmd))
+        return 0
+    else:
+        return os.system(cmd)
+
 ####
 # class vbmc holds attributes associated to a VMID: IP/mask/UDP
 #
@@ -391,15 +400,29 @@ class vbmcbase:
         self._check_initialized()
 
         # adding a new IP address
-        os.system("ip addr add {}/{} dev {}".format(self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].masklen, self.net_dev))
-
+        cmd = "ip addr add {}/{} dev {} label {}".format(self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].masklen, self.net_dev, vmid)
+        if os_system(cmd) != 0:
+            raise ValueError("shell command failed: {}".format(cmd))
+            
         # adding an iptable rule
-        os.system("iptables -t nat -A PREROUTING -i {} -p udp --dport 623 -d {} -j REDIRECT --to-ports {}".format(self.net_dev, self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].udp_port))
+        cmd = "iptables -t nat -A PREROUTING -i {} -p udp --dport 623 -d {} -j REDIRECT --to-ports {}".format(self.net_dev, self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].udp_port)
+        if os_system(cmd) != 0:
+            raise ValueError("shell command failed: {}".format(cmd))
+
+    def _add_to_pbmc(self, vmid):
+        """
+        Update pbmcd configuration
 
         # adding a new bmc
-        os.system("""source {} 2> /dev/null || . {} 2> /dev/null ; pbmc add --username {} --password {} --port {} --proxmox-address {}
-                 --token-user {} --token-name {} --token-value {} {}
-              """.format(self.venv_path, self.venv_path, self.bmc_login, self.bmc_pass, self.vbmcs[vmid].udp_port, self.proxmox_ip, self.api_user, self.token_name, self.token_secret, vmid))
+        cmd = "source {} 2> /dev/null || . {} 2> /dev/null ; pbmc add --username {} --password {} --port {} --proxmox-address {} --token-user {} --token-name {} --token-value {} {}".format(
+            self.venv_path, self.venv_path, self.bmc_login, self.bmc_pass, self.vbmcs[vmid].udp_port, self.proxmox_ip, self.api_user, self.token_name, self.token_secret, vmid)
+        if os_system(cmd) != 0:
+            raise ValueError("shell command failed: {}".format(cmd))
+
+        # activating the new bmc
+        cmd = "source {} 2> /dev/null || . {} 2> /dev/null ; pbmc start {}".format(self.venv_path, self.venv_path, vmid)
+        if os_system(cmd) != 0:
+            raise ValueError("shell command failed: {}".format(cmd))
 
 
     def _del_from_system(self, vmid):
@@ -410,14 +433,34 @@ class vbmcbase:
 
         self._check_initialized()
 
-        # removing the vBMC instance
-        os.system("source {} 2> /dev/null || . {} 2> /dev/null ; pbmc del {}".format(self.venv_path, self.venv_path, vmid))
+        error = []
 
         # removing iptable rule
-        os.system("iptables -t nat -D PREROUTING -i {} -p udp --dport 623 -d {} -j REDIRECT --to-ports {}".format(self.net_dev, self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].udp_port))
+        cmd = "iptables -t nat -D PREROUTING -i {} -p udp --dport 623 -d {} -j REDIRECT --to-ports {}".format(self.net_dev, self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].udp_port)
+        if os_system(cmd) != 0:
+            error.append(cmd)
 
         # removing the extra IP
-        os.system("ip addr del {}/{} dev {}".format(self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].masklen, self.net_dev))
+        cmd = "ip addr delete {}/{} dev {} label {}".format(self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].masklen, self.net_dev, vmid)
+        if os_system(cmd) != 0:
+            error.append(cmd)
+
+        if len(error) > 0:
+            print("the following command failed:")
+            for cmd in error:
+                print(cmd)
+            raise ValueError("shell command failed")
+
+    def _del_from_pbmc(self, vmid):
+        """
+        unconfiguring pbmc for the given VM ID
+
+        
+        """
+        # removing the vBMC instance
+        cmd = "source {} 2> /dev/null || . {} 2> /dev/null ; pbmc del {}".format(self.venv_path, self.venv_path, vmid)
+        if os_system(cmd) != 0:
+            raise ValueError("pbmc command failed: {}".format(cmd))
 
 
     def _has_vmid(self, vmid):
@@ -438,15 +481,15 @@ class vbmcbase:
         self.vbmcs.pop(vmid)
 
     def _check_os_stuff(self):
-        x = os.system("iptables -V > /dev/null")
+        x = os_system("iptables -V > /dev/null")
         if x != 0:
             raise ValueError("no iptables command available, aborting the operation")
-        x = os.system("ip a > /dev/null")
+        x = os_system("ip a > /dev/null")
         if x != 0:
             raise ValueError("no ip command available, aborting the operation")
 
         # we assume the default shell is bourn shell (not a ksh/tcsh/csh...)
-        x = os.system("source {} 2> /dev/null || . {} 2> /dev/null ; pbmc --version > /dev/null".format(self.venv_path, self.venv_path))
+        x = os_system("source {} 2> /dev/null || . {} 2> /dev/null ; pbmc --version > /dev/null".format(self.venv_path, self.venv_path))
         if x != 0:
             raise ValueError("pbmc command not found in venv activated by {}".format(self.venv_path))
 
