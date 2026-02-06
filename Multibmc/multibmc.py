@@ -2,6 +2,7 @@
 
 import json
 import sys
+import os
 
 #
 # local error raise ValueError exception
@@ -211,6 +212,7 @@ class vbmcbase:
 
         """
 
+        self._check_os_stuff()
         if self._has_vmid(vmid):
             raise ValueError("VM ID {} already has a configuration set".format(vmid))
         udp = self._find_free_udp()
@@ -223,6 +225,7 @@ class vbmcbase:
         remove an vBMC from the system and database
 
         """
+        self._check_os_stuff()
         if not self._has_vmid(vmid):
             raise ValueError("VM ID {} has no configuration set".format(vmid))
         self._del_from_system(vmid)
@@ -277,6 +280,7 @@ class vbmcbase:
 
         """
 
+        self._check_os_stuff()
         for x in self.vbmcs:
             self._del_from_system(x)
 
@@ -286,6 +290,7 @@ class vbmcbase:
 
         """
 
+        self._check_os_stuff()
         for x in self.vbmcs:
             self._add_to_system(x)
 
@@ -392,9 +397,9 @@ class vbmcbase:
         print("iptables -t nat -A PREROUTING -i {} -p udp --dport 623 -d {} -j REDIRECT --to-ports {}".format(self.net_dev, self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].udp_port))
 
         # adding a new bmc
-        print("""source {} ; pbmc add --username {} --password {} --port {} --proxmox-address {}
+        print("""source {} 2> /dev/null || . {} 2> /dev/null ; pbmc add --username {} --password {} --port {} --proxmox-address {}
                  --token-user {} --token-name {} --token-value {} {}
-              """.format(self.venv_path, self.bmc_login, self.bmc_pass, self.vbmcs[vmid].udp_port, self.proxmox_ip, self.api_user, self.token_name, self.token_secret, vmid))
+              """.format(self.venv_path, self.venv_path, self.bmc_login, self.bmc_pass, self.vbmcs[vmid].udp_port, self.proxmox_ip, self.api_user, self.token_name, self.token_secret, vmid))
 
 
     def _del_from_system(self, vmid):
@@ -406,7 +411,7 @@ class vbmcbase:
         self._check_initialized()
 
         # removing the vBMC instance
-        print("source {} ; pbmc del {}".format(self.venv_path, vmid))
+        print("source {} 2> /dev/null || . {} 2> /dev/null ; pbmc del {}".format(self.venv_path, self.venv_path, vmid))
 
         # removing iptable rule
         print("iptables -t nat -D PREROUTING -i {} -p udp --dport 623 -d {} -j REDIRECT --to-ports {}".format(self.net_dev, self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].udp_port))
@@ -432,6 +437,18 @@ class vbmcbase:
         self._check_initialized()
         self.vbmcs.pop(vmid)
 
+    def _check_os_stuff(self):
+        x = os.system("iptables -V > /dev/null")
+        if x != 0:
+            raise ValueError("no iptables command available, aborting the operation")
+        x = os.system("ip a > /dev/null")
+        if x != 0:
+            raise ValueError("no ip command available, aborting the operation")
+
+        # we assume the default shell is bourn shell (not a ksh/tcsh/csh...)
+        x = os.system("source {} 2> /dev/null || . {} 2> /dev/null ; pbmc --version > /dev/null".format(self.venv_path, self.venv_path))
+        if x != 0:
+            raise ValueError("pbmc command not found in venv activated by {}".format(self.venv_path))
 
     ### class static fields
 
