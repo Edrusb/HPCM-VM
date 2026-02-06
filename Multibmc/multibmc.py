@@ -449,9 +449,9 @@ class vbmcbase:
 
 
 
-###
-#
+####
 # Usage
+#
 #
 
 def usage(argv0):
@@ -466,11 +466,14 @@ def usage(argv0):
     print("*run* and *stop* are to be used from the init process to system initial setup")
     print("Before any command on a <configfile> the *init* command must be run which will create/overwrite the given file")
     print("")
+    exit(1)
 
+####
+# command line parsing
+#
+#
 
-
-
-if __name__ == "__main__":
+def cli_parser():
     argv = sys.argv
     if len(argv) < 3:
         usage(argv[0])
@@ -516,3 +519,22 @@ if __name__ == "__main__":
             case _:
                 usage(argv[0])
 
+
+####
+# exception and exit code handling
+#
+#
+
+if __name__ == "__main__":
+    try:
+        cli_parser()
+        exit(0)
+    except Exception as e:
+        print("{}: {}".format(sys.argv[0], e))
+        exit(2)
+
+# exit code:
+# 0 - OK
+# 1 - syntax error (usage() routine)
+# 2 - other error
+#
