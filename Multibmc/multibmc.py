@@ -537,12 +537,12 @@ class vbmcbase:
 #
 
 def usage(argv0):
-    print("usage: {} init <configfile> <net device> <udp min> <udp max> <bmcs login> <bmcs pass> <pbmc venv path> <api_user> <token name> <token secret> <proxmox IP/FQDN>".format(argv0))
-    print("usage: {} run  <configfile>".format(argv0))
-    print("usage: {} stop <configfile>".format(argv0))
-    print("usage: {} add  <configfile> <VMID> <IP> <mask len>".format(argv0))
-    print("usage: {} del  <configfile> <VMID>".format(argv0))
-    print("usage: {} list <configfile>".format(argv0))
+    print("usage: {} <configfile> init <net device> <udp min> <udp max> <bmcs login> <bmcs pass> <pbmc venv path> <api_user> <token name> <token secret> <proxmox IP/FQDN>".format(argv0))
+    print("usage: {} <configfile> run".format(argv0))
+    print("usage: {} <configfile> stop".format(argv0))
+    print("usage: {} <configfile> add <VMID> <IP> <mask len>".format(argv0))
+    print("usage: {} <configfile> del <VMID>".format(argv0))
+    print("usage: {} <configfile> list".format(argv0))
     print("")
     print("The *add* and *del* command take effect immediately no need to *stop* and *run* the program.")
     print("*run* and *stop* are to be used from the init process to system initial setup")
@@ -561,16 +561,16 @@ def cli_parser():
         usage(argv[0])
     else:
         base = vbmcbase()
-        if argv[1] != "init":
-            base.load(argv[2])
+        if argv[2] != "init":
+            base.load(argv[1])
 
-        match argv[1]:
+        match argv[2]:
             case "init":
                 if len(argv) != 13:
                     usage(argv[0])
                 else:
                     base.set_to(argv[3], int(argv[4]), int(argv[5]), argv[6], argv[7], argv[8], argv[9], argv[10], argv[11], argv[12])
-                    base.dump(argv[2])
+                    base.dump(argv[1])
             case "run":
                 if len(argv) != 3:
                     usage(argv[0])
@@ -586,13 +586,13 @@ def cli_parser():
                     usage(argv[0])
                 else:
                     base.add(argv[3], argv[4], argv[5])
-                    base.dump(argv[2])
+                    base.dump(argv[1])
             case "del":
                 if len(argv) != 4:
                     usage(argv[0])
                 else:
                     base.delete(argv[3])
-                    base.dump(argv[2])
+                    base.dump(argv[1])
             case "list":
                 if len(argv) != 3:
                     usage(argv[0])
