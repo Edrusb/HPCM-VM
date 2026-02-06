@@ -238,23 +238,30 @@ class vbmcbase:
         """
 
         self._check_initialized()
-
+        print("")
         print("Global parameters")
-        print("Net device: {}".format(self.net_dev))
-        print("UDP range: {} - {}".format(self.udp_min, self.udp_max))
-        print("BMC login / password: {} / {}".format(self.bmc_login, self.bmc_pass))
-        print("venv path: {}".format(self.venv_path))
-        print("API user: {}".format(self.api_user))
-        print("Token name / secret: {} / {}".format(self.token_name, self.token_secret))
+        print("------------------")
+        print("Net device  : {}".format(self.net_dev))
+        print("UDP range   : {} - {}".format(self.udp_min, self.udp_max))
+        print("BMC login   : {}".format(self.bmc_login))
+        print("BMC password: {}".format(self.bmc_pass))
+        print("venv path   : {}".format(self.venv_path))
+        print("API user    : {}".format(self.api_user))
+        print("Token name  : {}".format(self.token_name))
+        print("Token secret: {}".format(self.token_secret))
         print("Proxmox host: {}".format(self.proxmox_ip))
         print("")
         print("Configured BMCs:")
-        print("+--------+---------------------+-------+")
-        print("|  VM ID |     IP address      | UDP   |")
-        print("+--------+---------------------+-------+")
-        for x in self.vbmcs:
-            print("| {:>6} | {:>16}/{:<2} | {:>5} |".format(x, self.vbmcs[x].ipv4addr, self.vbmcs[x].masklen, self.vbmcs[x].udp_port))
-        print("+--------+---------------------+-------+")
+        print("------------------")
+        if len(self.vbmcs) == 0:
+            print("None")
+        else:
+            print("+--------+---------------------+-------+")
+            print("|  VM ID |     IP address      | UDP   |")
+            print("+--------+---------------------+-------+")
+            for x in self.vbmcs:
+                print("| {:>6} | {:>16}/{:<2} | {:>5} |".format(x, self.vbmcs[x].ipv4addr, self.vbmcs[x].masklen, self.vbmcs[x].udp_port))
+            print("+--------+---------------------+-------+")
         print("")
 
     def check(self):
