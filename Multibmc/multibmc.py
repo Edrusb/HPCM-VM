@@ -225,8 +225,13 @@ class vbmcbase:
         if self._has_vmid(vmid):
             raise ValueError("VM ID {} already has a configuration set".format(vmid))
         udp = self._find_free_udp()
-        self._add_to_base(vmid, ip, masklen, udp)
-        self._add_to_system(vmid)
+        try:
+            self._add_to_base(vmid, ip, masklen, udp)
+            self._add_to_pbmc(vmid)
+            self._add_to_system(vmid)
+        except:
+            self.delete(vmid)
+            raise
 
 
     def delete(self, vmid):
@@ -238,6 +243,7 @@ class vbmcbase:
         if not self._has_vmid(vmid):
             raise ValueError("VM ID {} has no configuration set".format(vmid))
         self._del_from_system(vmid)
+        self._del_from_pbmc(vmid)
         self._del_from_base(vmid)
 
     def list(self):
@@ -283,7 +289,7 @@ class vbmcbase:
         """
         pass
 
-    def clear_system(self):
+    def clear_system(self, all: bool = False):
         """
         Removes from the system the BMCs, extra IPs and iptables rules defined in the base
 
@@ -291,9 +297,11 @@ class vbmcbase:
 
         self._check_os_stuff()
         for x in self.vbmcs:
+            if all:
+                self._del_from_pbmc(x)
             self._del_from_system(x)
 
-    def set_system(self):
+    def set_system(self, all: bool = False):
         """
         Apply to the system the iptables rules, extra IPs and creates the BMCs according to the base content
 
@@ -301,6 +309,8 @@ class vbmcbase:
 
         self._check_os_stuff()
         for x in self.vbmcs:
+            if all:
+                self._add_to_pbmc(x)
             self._add_to_system(x)
 
         #### class "private" equivalent methods
@@ -413,6 +423,11 @@ class vbmcbase:
         """
         Update pbmcd configuration
 
+        this configuration persists accross reboot and
+        have this to be treated separatly from the IP
+        and iptables setup which don't persist.
+        """
+            
         # adding a new bmc
         cmd = "source {} 2> /dev/null || . {} 2> /dev/null ; pbmc add --username {} --password {} --port {} --proxmox-address {} --token-user {} --token-name {} --token-value {} {}".format(
             self.venv_path, self.venv_path, self.bmc_login, self.bmc_pass, self.vbmcs[vmid].udp_port, self.proxmox_ip, self.api_user, self.token_name, self.token_secret, vmid)
