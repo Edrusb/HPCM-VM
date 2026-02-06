@@ -211,6 +211,8 @@ class vbmcbase:
 
         """
 
+        if self._has_vmid(vmid):
+            raise ValueError("VM ID {} already has a configuration set".format(vmid))
         udp = self._find_free_udp()
         self._add_to_base(vmid, ip, masklen, udp)
         self._add_to_system(vmid)
@@ -221,6 +223,8 @@ class vbmcbase:
         remove an vBMC from the system and database
 
         """
+        if not self._has_vmid(vmid):
+            raise ValueError("VM ID {} has no configuration set".format(vmid))
         self._del_from_system(vmid)
         self._del_from_base(vmid)
 
@@ -403,6 +407,14 @@ class vbmcbase:
         # removing the extra IP
         print("ip addr del {}/{} dev {}".format(self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].masklen, self.net_dev))
 
+
+    def _has_vmid(self, vmid):
+        """
+        check whether a configuration exists for the provided VM ID
+
+        """
+
+        return self.vbmcs.get(vmid) != None
 
     def _del_from_base(self, vmid):
         """
