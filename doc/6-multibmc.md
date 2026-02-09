@@ -21,10 +21,10 @@ more network interface) where vBMC will be reachable (by ipmitool or HPMC for ex
 ## Usage
 
 >
-> ./multibmc.py /etc/multibmc.json ens19 11000 11999 admin password /root/proxmoxbmc/.env/bin/activate root@pam vbmc-token xxxxxx-xx-xxx-xxxxx proxmox-6
+> ./multibmc.py /etc/multibmc.json **init** ens19 11000 11999 admin password /root/proxmoxbmc/.env/bin/activate root@pam vbmc-token xxxxxx-xx-xxx-xxxxx proxmox-6
 >
 
-This command create the */etc/multibmc.json* configuration file and stores:
+This command create the initial */etc/multibmc.json* configuration file and stores and has only to be run once:
 - **ens19** the interface to expose the vBMC one
 - **11000** to **11999** is the UDP range of ports where *proxmoxbmc* will bind its vBMC
 - **admin** is the login to use to connect to the BMCs (same login for all, but room has been made for it can be enhanced to login/password per BMC in the future)
@@ -36,7 +36,7 @@ This command create the */etc/multibmc.json* configuration file and stores:
 - **proxmox-6** the hostname or the IP address of one of the proxmox hypervisor of the cluster
 
 >
-> ./multibmc.py /etc/multibmc.json add 111 10.25.255.250 16
+> ./multibmc.py /etc/multibmc.json **add** 111 10.25.255.250 16
 >
 
 Using this command we create a new vBMC and store its configuration in /etc/multibmc.json configuration file
@@ -49,7 +49,7 @@ Using this command we create a new vBMC and store its configuration in /etc/mult
 > to the selected network interface.
 
 >
-> ./multibmc.py /etc/multibmc.json list
+> ./multibmc.py /etc/multibmc.json **list**
 >
 
 Gives content visibility of the /etc/multibmc.json configuration file (You could also
@@ -57,16 +57,16 @@ use the *jq* program, but would have to interprete the meaning of the different 
 
 
 >
-> ./multibmc.py /etc/multibmc.json start
+> ./multibmc.py /etc/multibmc.json **start**
 >
-> ./multibmc.py /etc/multibmc.json stop
+> ./multibmc.py /etc/multibmc.json **stop**
 >
 
 this form is to run from the *init* process, like systemd for example (see below for
 a systemd configuration file).
 
 >
-> ./multibmc.py /etc/multibmc.josn del 111
+> ./multibmc.py /etc/multibmc.josn **del** 111
 >
 
 will remove the vBMC for the VM having the ID 111 (and no need to restart the
@@ -80,20 +80,19 @@ above).
 - proxmoxbmc installed in particular pbmcd should be ran from the init process
 - python3
 
-In this page we will determine the modification to add to our VM template
-in HPCM configuration to leverage the vBMC addition we did, for the compute03
-VM.
-
 ## Systemd configuration file
 
 ---- TO BE ADDED ---
 
 # Integration with HPCM
+In the rest of this page we will determine the modifications to add to our VM template
+in HPCM configuration in order to leverage the vBMC addition we did for the compute03
+VM.
 
 ## Multibmc configuration
 
 Continuing with our example, we cloned the compute03 node as compute01, compute02 and
-compute04. So we now have four VMs. Cleaning all previous vBMC on the VM hosting **proxmoxbmc** we just create the following commands:
+compute04. So we now have four VMs. Cleaning all previous vBMC on the VM hosting **proxmoxbmc** we now just create the following commands:
 
 ```
 root@vbmc:~/Multibmc# ./multibmc.py /etc/multibmc.json init ens19 11000 11999 admin password  /root/proxmoxbmc/.env/bin/activate root@pam vbmc-token ef883eba-8027-4ab6-8466-a37f3e08babc proxmox-6
@@ -163,8 +162,10 @@ up the configfile (here [three-new-nodes.txt](../resources/three-new-nodes.txt))
 >
 > cm node add -c three-new-nodes.txt --allow-duplicate-macs-and-ips
 >
+We need the *--allow-duplicate-macs-and-ips* because, if the different vBMC are using different IPs, they
+use the same MAC address, the one of the ens19 interface in our lab case.
 
-But that was not sufficient, we also needed to specify as we did for compute03, the ipmi protocol
+Next, we need to specify for the three new VMs, as we did for compute03, the ipmi protocol to use:
 
 ```
 [root@hpcm1 Documents]# cadmin --set-bmc-protocol --node compute01 ipmi
@@ -174,8 +175,8 @@ But that was not sufficient, we also needed to specify as we did for compute03, 
 ```
 
 ## Using the new BMC IP for compute03
-we used the IP address of the vBMCs VM for compute03 when using *proxmoxbmc* without
-*multibmc*, we must now change this VM BMC IP to the one we assigned above:
+In the previous page, we used the IP address of the vBMCs VM for compute03 when using *proxmoxbmc* without
+*multibmc*, we must now change it to the IP we assigned above using *multibmc*:
 
 ```
 [root@hpcm1 ~]# cm node nic show -n compute03
