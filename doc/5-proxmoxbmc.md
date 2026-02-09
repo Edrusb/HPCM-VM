@@ -306,5 +306,5 @@ BMC (listening on port UDP/623) to only one VM.
 For that reason we provide here [Multibmc](6-multibmc.md) program to enhance the features
 of *proxmoxbmc* and reach that goal.
 
-| [Prev](4-console-on-seiral.md) | [top](../README.md)   |  [Next](6-multibmc.md)        |
+| [Prev](4-console-on-serial.md) | [top](../README.md)   |  [Next](6-multibmc.md)        |
 |:-------------------------------|:---------------------:|------------------------------:|
