@@ -1,7 +1,9 @@
 
-# HPCM Tweeking
+# HPCM Tweeking when no vBMC is present
+This page relates the setup of HPCM to manage a VM without vBMC, here the focus
+is how to make a VM able to PXE boot with HPCM.
 
-Some VM specific aspects have to be taken into account:
+Some VM specific aspects have to be taken into account in HPCM:
 - Unlike real compute nodes, VM do not have the BMC nor iLO stuf that let HPCM
   controlling their power.
 - The second point concerns the console port, VM usually have virtual display and use
