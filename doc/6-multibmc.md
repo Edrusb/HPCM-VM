@@ -4,19 +4,19 @@
 ## Introduction
 
 [Multibmc](../Multibmc/multibmc.py) is a Object Oriented python program
-we created on top of *proxmoxbmc* to enhance
-its features and let it provide a standard
+created for the present project, relying on *proxmoxbmc* and enhancing
+its features, simplifying its setup and roviding a standard
 BMC (listening on the standard 623/UDP port) for **all** VMs (not only one).
 
 It is to be considered as a wrapper around *proxmoxbmc* in the followin way:
-- it sets stores once and for all the many common parameters needed to setup
+- it stores once and for all the many common parameters needed to setup
 a single vBMC using *proxmoxbmc*
-- eases the addition and remove a vBMC for a given VM
-- persists accross reboots when called from the init process (sysV init, systemd...)
+- it eases the addition and removal a vBMC for a given VM
+- it persists accross reboots when called from the init process (sysV init, systemd...)
 
 It is expected to be ran on a VM where *proxmoxbmc* is installed, VM from where at least
 one hypervisor of the *proxmox* cluster is available and eventually having a second (or
-more network interface) where vBMC will be reachable.
+more network interface) where vBMC will be reachable (by ipmitool or HPMC for example).
 
 ## Usage
 
