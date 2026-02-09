@@ -37,6 +37,8 @@ This command create the initial */etc/multibmc.json* configuration file and stor
 - **xxx-x...xxx** the token secret as obtained at its creation time
 - **proxmox-6** the hostname or the IP address of one of the proxmox hypervisor of the cluster
 
+Several instances of *multibmc* can be run on this VM, they should only have their own UDP port range.
+
 >
 > ./multibmc.py /etc/multibmc.json **add** 111 10.25.255.250 16
 >
