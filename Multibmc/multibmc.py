@@ -538,7 +538,7 @@ class vbmcbase:
 
 def usage(argv0):
     print("usage: {} <configfile> init <net device> <udp min> <udp max> <bmcs login> <bmcs pass> <pbmc venv path> <api_user> <token name> <token secret> <proxmox IP/FQDN>".format(argv0))
-    print("usage: {} <configfile> run".format(argv0))
+    print("usage: {} <configfile> start".format(argv0))
     print("usage: {} <configfile> stop".format(argv0))
     print("usage: {} <configfile> add <VMID> <IP> <mask len>".format(argv0))
     print("usage: {} <configfile> del <VMID>".format(argv0))
@@ -571,7 +571,7 @@ def cli_parser():
                 else:
                     base.set_to(argv[3], int(argv[4]), int(argv[5]), argv[6], argv[7], argv[8], argv[9], argv[10], argv[11], argv[12])
                     base.dump(argv[1])
-            case "run":
+            case "start":
                 if len(argv) != 3:
                     usage(argv[0])
                 else:
