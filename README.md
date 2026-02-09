@@ -27,8 +27,10 @@ is not the target here. The objective of this project is rather the ability to u
 - play with HPCM slots
 - power management (the ability to power of/off a given compute node from HPCM) thanks to virtual BMCs
 
+The grey zone:
+- network switch managment (you need an HPCM supported switch, but the virtual switches will not be managed/visible by HPCM)
+
 The HPCM features that will not be available in a VM environment are:
-- network switch managment
 - remote console port access
 - Slingshot HSN managment (well, I have not checked whether a software emulation was exiting, but I doubt it would, correct me if I'm wrong!!!)
 
