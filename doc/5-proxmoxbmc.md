@@ -304,10 +304,12 @@ And it is! The VM 113 is now really powered on!
 
 We now have an VM with a BMC implemented as a virtual machine running the *pbmcd* daemon,
 thanks to the *proxmoxbmc* software. But *proxmoxbmc* is only able to provide standard
-BMC (listening on port UDP/623) to only one VM.
+BMC (listening on port UDP/623) to only one VM. For other VM the port the BMC listens on 
+must be non-standard... or one should deploy a VM with *proxmoxbmc* for each VM that to
+power of/off by mean of IPMI... this would be quite costly in resource.
 
-For that reason we provide here [Multibmc](6-multibmc.md) program to enhance the features
-of *proxmoxbmc* and reach that goal.
+Hopefully the [Multibmc](6-multibmc.md) program we provide in this project enhances the features
+of *proxmoxbmc* and reach that goal: A single VM to implement vBMC for all VMs.
 
 | [Prev](4-console-on-serial.md) | [top](../README.md)   |  [Next](6-multibmc.md)        |
 |:-------------------------------|:---------------------:|------------------------------:|
