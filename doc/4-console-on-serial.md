@@ -141,5 +141,5 @@ Last login: Thu Jan 22 17:05:52 from 10.20.25.254
 
 [^1]: replace the star (*) by a number, like in here ```/dev/ttyS0```
 
-| [Prev](hpcm-node-setup.md) | [top](../README.md)   | [Next](proxmoxbmc.md) |
-|:---------------------------|:---------------------:|----------------------:|
+| [Prev](3-hpcm-node-setup.md) | [top](../README.md)   | [Next](5-proxmoxbmc.md) |
+|:-----------------------------|:---------------------:|------------------------:|
