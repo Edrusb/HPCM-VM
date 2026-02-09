@@ -2,10 +2,10 @@
 # Requirements
 
 ## Hardware needed
-To experiment with HPCM and VMs of you will need at least:
-- a single computer, more or bigger one is better:
+The environment used for *Proxmox* Lab can be as small as:
+- a single computer, (but yes, more or bigger one allows more VMs):
   - very minimum 16 GiB of RAM, 8 GB for HPCM VM and for example 8 GB for a single compute node
-  - x86_64 CPU (I could run HCPM + a single compute node VM using only 8 cores, and it was not particularly slow)
+  - x86_64 CPU (for HPCM at least)
   - Disk/storage at least 300 GiB (can be less but it will difficult to have several slots on the HPCM VM and playing with repos and images will be very restrictive)
 - Physical (IP/Ethernet) network if more than one hypervisor is to be used. 1 Gbit/s connection to hypervisors is slow but fine, depending on what workload you want to test over the Software "HPC" cluster
 
