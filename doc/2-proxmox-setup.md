@@ -1,4 +1,4 @@
-# Implementation of VM
+# VM Implementation
 For vBMC only there is no constraint on the VM configuration to manage, but more
 is needed for the VM to be able to PXE Boot by mean of HPCM. This part is detailed here.
 
