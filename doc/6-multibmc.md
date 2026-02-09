@@ -85,9 +85,9 @@ above).
 ---- TO BE ADDED ---
 
 # Integration with HPCM
-In the rest of this page we will determine the modifications to add to our VM template
-in HPCM configuration in order to leverage the vBMC addition we did for the compute03
-VM.
+In the rest of this page we will determine the modifications to add to 
+HPCM in order to leverage the vBMC addition we did for the tree additional
+VMs we created from compute03.
 
 ## Multibmc configuration
 
@@ -157,7 +157,7 @@ network informations, we will use this [template3.txt](../resources/template3.tx
 
 The template we created above includes all the networks (hsn, head-bmc, head), this might not be
 the best approach as this implies us to provide the MAC addresses of these new VM when setting
-up the configfile (here [three-new-nodes.txt](../resources/three-new-nodes.txt)) of the nodes to add:
+up the configfile part (here [three-new-nodes.txt](../resources/three-new-nodes.txt)) describing the nodes to add:
 
 >
 > cm node add -c three-new-nodes.txt --allow-duplicate-macs-and-ips
