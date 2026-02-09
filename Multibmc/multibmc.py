@@ -1,11 +1,33 @@
 #!/usr/bin/python3
 
+#######################################################################
+# multibmc - tool to setup multiple BMC on the same node all listening on start port
+# Copyright (C) 2026 Denis Corbin
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+#######################################################################
+
+
 import json
 import sys
 import os
 
+####
+# Self-troubleshooting construct
 #
-# local error raise ValueError exception
 #
 
 DEBUG = False
@@ -17,8 +39,11 @@ def os_system(cmd):
     else:
         return os.system(cmd)
 
+
+
 ####
 # class vbmc holds attributes associated to a VMID: IP/mask/UDP
+#
 #
 
 class vbmc:
@@ -68,8 +93,9 @@ class vbmc:
 
 
 
+
 ####
-# class vbmcclass holds all vBMC sharing a given network interface and UDP range
+# class vbmcbase holds info on all vBMC sharing a given network interface and UDP range
 #
 #
 
@@ -413,7 +439,7 @@ class vbmcbase:
         cmd = "ip addr add {}/{} dev {} label {}".format(self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].masklen, self.net_dev, vmid)
         if os_system(cmd) != 0:
             raise ValueError("shell command failed: {}".format(cmd))
-            
+
         # adding an iptable rule
         cmd = "iptables -t nat -A PREROUTING -i {} -p udp --dport 623 -d {} -j REDIRECT --to-ports {}".format(self.net_dev, self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].udp_port)
         if os_system(cmd) != 0:
@@ -427,7 +453,7 @@ class vbmcbase:
         have this to be treated separatly from the IP
         and iptables setup which don't persist.
         """
-            
+
         # adding a new bmc
         cmd = "source {} 2> /dev/null || . {} 2> /dev/null ; pbmc add --username {} --password {} --port {} --proxmox-address {} --token-user {} --token-name {} --token-value {} {}".format(
             self.venv_path, self.venv_path, self.bmc_login, self.bmc_pass, self.vbmcs[vmid].udp_port, self.proxmox_ip, self.api_user, self.token_name, self.token_secret, vmid)
@@ -470,7 +496,7 @@ class vbmcbase:
         """
         unconfiguring pbmc for the given VM ID
 
-        
+
         """
         # removing the vBMC instance
         cmd = "source {} 2> /dev/null || . {} 2> /dev/null ; pbmc del {}".format(self.venv_path, self.venv_path, vmid)
@@ -554,7 +580,7 @@ def usage(argv0):
     exit(1)
 
 ####
-# command line parsing
+# command-line parsing
 #
 #
 
