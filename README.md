@@ -1,4 +1,4 @@
-# A BMC for each VM under Proxmox and an use case illustration with HPCM Software
+# A BMC for each VM under Proxmox and a use case illustration with HPCM Software
 
 ## Abstract
 [HPCM](https://www.hpe.com/psnow/doc/a00044858enw) purpose is to manage Clusters of High Performance Computers, something where
