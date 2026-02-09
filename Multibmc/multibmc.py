@@ -538,8 +538,8 @@ class vbmcbase:
 
 def usage(argv0):
     print("usage: {} <configfile> init <net device> <udp min> <udp max> <bmcs login> <bmcs pass> <pbmc venv path> <api_user> <token name> <token secret> <proxmox IP/FQDN>".format(argv0))
-    print("usage: {} <configfile> start".format(argv0))
-    print("usage: {} <configfile> stop".format(argv0))
+    print("usage: {} <configfile> start [all]".format(argv0))
+    print("usage: {} <configfile> stop [all]".format(argv0))
     print("usage: {} <configfile> add <VMID> <IP> <mask len>".format(argv0))
     print("usage: {} <configfile> del <VMID>".format(argv0))
     print("usage: {} <configfile> list".format(argv0))
@@ -548,6 +548,9 @@ def usage(argv0):
     print("*run* and *stop* are to be used from the init process to system initial setup")
     print("Before any command on a <configfile> the *init* command must be run which will create/overwrite the given file")
     print("")
+    print("the pbmc base survives reboot (stored in the bpmcd daemon config file). This the")
+    print("start and run commands do not try to clear or reset the bpmc virtual BMCs configurations")
+    print("unless the optional \"all\" keyword is added")
     exit(1)
 
 ####
@@ -572,15 +575,19 @@ def cli_parser():
                     base.set_to(argv[3], int(argv[4]), int(argv[5]), argv[6], argv[7], argv[8], argv[9], argv[10], argv[11], argv[12])
                     base.dump(argv[1])
             case "start":
-                if len(argv) != 3:
-                    usage(argv[0])
-                else:
+                if len(argv) == 3:
                     base.set_system()
-            case "stop":
-                if len(argv) != 3:
-                    usage(argv[0])
+                elif len(argv) == 4 and argv[3] == "all":
+                    base.set_system(True)
                 else:
+                    usage(argv[0])
+            case "stop":
+                if len(argv) == 3:
                     base.clear_system()
+                elif len(argv) == 4 and argv[3] == "all":
+                    base.clear_system(True)
+                else:
+                    usage(argv[0])
             case "add":
                 if len(argv) != 6:
                     usage(argv[0])
