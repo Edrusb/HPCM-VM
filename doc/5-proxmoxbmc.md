@@ -300,10 +300,11 @@ And it is! The VM 113 is now really powered on!
 ## Conclusion
 
 We now have an VM with a BMC implemented as a virtual machine running the *pbmcd* daemon,
-thanks to the *proxmoxbmc* software. But as *proxmoxbmc* is able to provide a virtual BMC for
-many VMs, we now need to find a way to either:
-- find how HPCM can communicate with a BMC using another port than the default UDP 623 port for IPMI
-- find a way for the vBMC to show to HPCM as many independent BMCs, all listening on port UDP 623
+thanks to the *proxmoxbmc* software. But *proxmoxbmc* is only able to provide standard
+BMC (listening on port UDP/623) to only one VM.
 
-| [Prev](4-console-on-seiral.md) | [top](../README.md)   |  [Next](6-multibmc.md) |
+For that reason we provide here [Multibmc](6-multibmc.md) program to enhance the features
+of *proxmoxbmc* and reach that goal.
+
+| [Prev](4-console-on-seiral.md) | [top](../README.md)   |  [Next](6-multibmc.md)        |
 |:-------------------------------|:---------------------:|------------------------------:|
