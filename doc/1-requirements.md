@@ -12,10 +12,8 @@ The environment used for *Proxmox* Lab can be as small as:
 ## Virtual Environment used - Proxmox
 I'm a big fan of [Proxmox Virtual Environment](https://www.proxmox.com/en/). Proxmox can be installed and used at no cost,
 it is qemu based virtualization wrapped into a nice (read fully featured) Web GUI. A CLI interface is also available, which I very rarely use, but can be useful for automation.
-Proxmox is based on Debian and receive a lot of additional packages to manage the Kernel Virtual Machine (KVM) of the Linux kernel, though the Proxmox/Linux system stays open
-and can receive a lot of customized software additions if needed.
-
-I will thus focus on this virtualization environment.
+Proxmox is based on Debian and receive a lot of additional packages to manage the Kernel Virtual Machine (KVM) the Linux kernel as well as containers, though the Proxmox/Linux system stays open
+and can receive a lot of customized software additions if needed (like your own security tools, apparmor, lynis...).
 
 ## Network Environment used
 There is not many constraints here:
@@ -24,16 +22,15 @@ There is not many constraints here:
   - Public VLAN and its IP subnet (what HPCM calls the "home" network), it pre-existed for other purposes in my environment,
   - an HPCM admin network (what HPCM calls the "head" network), VLAN through which HPCM exchanges data with the
     OS of the compute nodes (PXE Boot, Bittorrent imaging, monitoring...)
-  - the "head-bmc" network has been created in the infra, but as VMs do not have BMC or iLO by default,
-    we will not use until we find and test a [virtual BMC for proxmox](https://github.com/agnon/proxmoxbmc)
-    though from HPCM stand point, this VLAN exists and is ready for use
+  - the "head-bmc" network has been created in the infra, to reach the virtual BMCs
+  - High Speed Network to emulate a real HSN, but which here is just another vlan 
 - *eventually* inter-vlan routing (which can be carried by a Linux VM or a proxmox hypervisor, if you have no L3 switch nor router),
 
 If more than one hypervisior is to be used, a physical network will be needed, and the support for 802.1Q (vlan tagging)
 will be necessary to propagate VLANs between hypervisors.
 
 >[!Note]
-> If you plan to use UDPcast to push images to the compute nodes, you'll need to have support for multicast on
+> If you plan to use UDPcast with HPCM, to push images to the compute nodes, you'll need to have support for multicast on
 > your network, espetially an IGMP Querier will be needed to query which listener are in which group, this concerns
 > the "head" VLAN, mainly. If you do not want to bother with that complexity, keep using the default bittorrent method or try
 > the rsync alternative.
