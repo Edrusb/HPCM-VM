@@ -13,13 +13,10 @@ with the VM through this channel unless using the ```qm terminal <VMID>```
 command on the hypervisor itself.
 
 What is missing is a piece of sofware that links this hypervisor terminal
-to a IP/port and adhoc protocol (IPMI, Redfish...). If such piece of
-software was existing, I'm pretty sure it would also provide the ability
-to manage the power of the VM from outside the hypervisor, making a virtual
-Board Managment Controller (BMC).... but wait! This [stuff](https://github.com/agnon/proxmoxbmc) exists!
+to a IP/port and adhoc protocol (IPMI, Redfish...).
 
-For now we will just see with HPCM how to use what's serial console is available on
-Proxmox, later we will see how to setup this __proxmoxbmc__ stuff.
+FIn this page we will just see with HPCM how to use what's serial console is available on
+Proxmox and decide where a VM should push its *console* messages.
 
 ## VM configuration
 
