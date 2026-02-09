@@ -1,6 +1,9 @@
 
 
 # Proxmox BMC
+in this page we add a BMC to a single VM with the help of an addtional VM running the **Proxmoxbmc** software. 
+In the next page we will see how to extend *proxmoxbmc* to provide BMC service to many VMs using the **multibmc** 
+program object of this project.
 
 ## Presentation
 
