@@ -1,4 +1,6 @@
-# Implementation
+# Implementation of VM
+For vBMC only there is no constraint on the VM configuration to manage, but more
+is needed for the VM to be able to PXE Boot by mean of HPCM. This part is detailed here.
 
 ## Installing HPCM from an HPE provided ISO
 The VM to create for the HPCM software should have:
