@@ -4,8 +4,12 @@
 [HPCM](https://www.hpe.com/psnow/doc/a00044858enw) purpose is to manage Clusters of High Performance Computers, things where
 performance means *hardware*... so why using HPCM to manage Virtual Machines (i.e. *software* computers)?
 
-The objective here is to be able to experiment with the HPCM software, when you don't have the hardware and money that goes with
+This project has two incremental purposes:
+1. be able to have virtual BMC (Board Management Control) for each VM to be able to control the VM power
+by mean if IPMI protocol (for example using ipmitool or HPCM).
+2. be able to experiment with the HPCM software, when you don't have the hardware and money that goes with
 it or want to somehow prepare a big scale operation that will take place later on a real-hardware-powered HPC cluster.
+
 
 Thus the Performance (the P of HPC - High Performance Computing)
 is not the target here, the objectives are rather the ability to use and test as many features of HPCM as possible:
