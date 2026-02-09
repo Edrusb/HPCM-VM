@@ -194,6 +194,7 @@ Populating Dataset complete: 1.299s
 1 of 1 nodes completed in 8.8 seconds, averaging 1.7s per node
 Node configuration complete.
 [root@hpcm1 ~]#
+```
 
 
 ## Playing with HPCM
@@ -201,30 +202,22 @@ Node configuration complete.
 Let's see how this works now:
 
 ```
-[root@hpcm1 Documents]# cm power on -n compute01
-compute01: FAILURE:  power on : Unable to get Chassis Power Status
-
-[root@hpcm1 Documents]# cm power status -t system
+[root@hpcm1 ~]# cm power on -n compute01
+direct node compute01 power ON
+[root@hpcm1 ~]# cm power status -t system
 compute01    : On
 compute02    : Off
 compute03    : BOOTED
 compute04    : Off
-[root@hpcm1 Documents]#
+[root@hpcm1 ~]#
 ```
-
-At first it seemd the powering up of compute01 failed, but as before
-this is the "Chassis" of compute01 that HPCM failes to obtain the
-power information from. This is weird as using *ipmitool* this information
-is available and is identical to the compute power status.
 
 Let's continue:
 
 ```
-[root@hpcm1 Documents]# cm power on -n compute02,compute04
-compute02: FAILURE:  power on : Unable to get Chassis Power Status
-
-compute04: FAILURE:  power on : Unable to get Chassis Power Status
-
+[root@hpcm1 ~]# cm power on -n compute02,compute04
+direct node compute04 power ON
+direct node compute02 power ON
 [root@hpcm1 Documents]# cm power status -t system
 compute01    : BOOTED
 compute02    : On
@@ -232,10 +225,6 @@ compute03    : BOOTED
 compute04    : On
 [root@hpcm1 Documents]#
 ```
-
-Same thing here regard the false alarm, the compute node properly
-got powered up, and we see that in the meantime compute01 has now
-completed its booting process and is operational!
 
 Let's see the final stage:
 
@@ -251,7 +240,6 @@ Last login: Wed Feb  4 18:07:25 2026 from 10.26.255.254
 compute01
 [root@compute01 ~]#
 ```
-
 
 | [Prev](../proxmoxbmc.md) | [top](../README.md)   |  --- |
 |:-------------------------|:---------------------:|-----:|
