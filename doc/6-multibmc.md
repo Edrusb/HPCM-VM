@@ -3,7 +3,7 @@
 
 ## Introduction
 
-[Multibmc](../Multibmc/multibm.py) is a Object Oriented python program
+[Multibmc](../Multibmc/multibmc.py) is a Object Oriented python program
 we created on top of *proxmoxbmc* to enhance
 its features and let it provide a standard
 BMC (listening on the standard 623/UDP port) for **all** VMs (not only one).
