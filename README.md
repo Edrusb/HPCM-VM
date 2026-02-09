@@ -1,7 +1,7 @@
 # A BMC for each VM under Proxmox and this integration with HPCM 
 
 ## Abstract
-[HPCM](https://www.hpe.com/psnow/doc/a00044858enw) purpose is to manage Clusters of High Performance Computers, things where
+[HPCM](https://www.hpe.com/psnow/doc/a00044858enw) purpose is to manage Clusters of High Performance Computers, something where
 performance means *hardware*... so why using HPCM to manage Virtual Machines (i.e. *software* computers)?
 
 This project has two incremental purposes:
