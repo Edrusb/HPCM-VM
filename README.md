@@ -21,9 +21,9 @@ is not the target here, the objectives are rather the ability to use and test as
 - configure the cluster using Ansible
 - deploy and run some MPI application
 - play with HPCM slots
+- power management (the ability to boot or reboot a compute node from HPCM) thanks to virtual BMCs
 
 The HPCM features that will not be available in a VM environment are:
-- power management (the ability to boot or reboot a compute node from HPCM)
 - network switch management
 - remote console port access
 - Slingshot HSN will not be available (well, I have not checked whether a software emulation was exiting, but I doubt it would, correct me if I'm wrong!!!)
