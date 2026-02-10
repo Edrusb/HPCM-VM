@@ -1,8 +1,9 @@
 
 
 # Single Virtual BMC
-in this page we add a BMC to a single VM with the help of an addtional VM running the **Proxmoxbmc** software. 
-In the next page we will see how to extend *proxmoxbmc* to provide BMC service to many VMs using the **multibmc** 
+
+In this page we address the need of a BMC for a single VM using an auxilliary VM, running the **Proxmoxbmc** software. 
+In the next page we will see how to extend *proxmoxbmc* to provide this BMC feautre to many VMs using the **multibmc** 
 program object of this project.
 
 ## Presentation
@@ -31,8 +32,8 @@ This page describes how to setup and use *Proxmoxbmc* and follows this structure
 ## Architecture consideration
 
 As the fundation is the PVE REST API, it's only necessary to install *proxmoxer* and *proxmoxbmc* on
-a single node that has access, on one side, to all the PVE hypervisor, and on the other side
-is accessible from HPCM and the eventual SU_leader(s) node(s).
+a single node that has access, on one side, to at least one of PVE hypervisor of the PVE cluster, and on the other side
+is accessible from HPCM and the eventual SU_leader(s) node(s) to expose its BMC/IPMI interface.
 
 Here *node* means *VM*, of course.
 
@@ -40,7 +41,7 @@ From HPCM point of view, the vBMC node should be reachable through the head-bmc 
 
 ## Proxmoxer installation
 
-We just have to install it, no daemon to run:
+We just have to install it, no daemon needs to be run:
 
 >
 > pip install proxmoxer
@@ -88,7 +89,7 @@ We will stick to the Debian OS to install *proxmoxbmc* following the short doc p
 
 ### Manual execution
 
-Proxmoxbmc relies an a daemon, named **pbmcd** we can run manually this way:
+Proxmoxbmc relies an a daemon, named **pbmcd** which we can run manually this way:
 
 ```
    root@vbmc:~# cd ~/proxmoxbmc
@@ -100,7 +101,7 @@ Proxmoxbmc relies an a daemon, named **pbmcd** we can run manually this way:
 ### Integration with systemd
 
 As this *pbmcd* daemon should be fired each time the VM boots, it would be
-better to have the init process (the horrible octopus *systemctl* under Debian) doing
+better to have the init process (the horrible octopus *systemd* under Debian) doing
 that for us:
 
 ```
@@ -129,7 +130,7 @@ then we can activate the service with:
 root@vbmc:~# systemctl enable --now pbmcd
 ```
 
-Let's check the service is running as expected:
+Let's check whether the service is running as expected:
 ```
 root@vbmc:~# systemctl status pbmcd
 ● pbmcd.service - pbmcd service
@@ -150,7 +151,7 @@ root@vbmc:~#
 ## Proxmoxbmc to PVE authentication
 
 Proxmoxbmc will have to access PVE API to realize the operations it will receive through IPMI. This means
-to authenticate to the Proxmox cluster API. This authentication relies **tokens**.
+to authenticate to the Proxmox cluster API. This authentication relies on **tokens**.
 
 The principle is to:
 - create a role and give it a set of privileges
@@ -173,6 +174,9 @@ Check that the proper privileges have been assigned to the role. You should see 
 
 ![PVE role configuration](../pictures/role-config-check.png)
 
+If you are lazy, you can use instead the prebuilt PVEVMAdmin role provided by Proxmox. But it gives too
+much privileges in my humble opinion.
+
 ### Creating an API Token
 
 Then go to the menu ```Datacenter | Permissions | API Tokens```and add a new token
@@ -187,20 +191,20 @@ show again (you would be good to delete this token an create a new one in case o
 
 ### Assigning role to the token
 
-Last with Proxmox authentication, after having created:
+Last point with Proxmox authentication, after having created:
 - a bmc-role
 - an API token
 
 We must now assign the *bmc-role* to the token we have created, for it receives some privileges, since
-we checked the *privilege separation*[^1] box when creating the token. For that go to the
+we checked the *privilege separation*[^1] box when creating the token. For that, go to the
 ```Datacenter | Permissions``` menu and *Add an API Token permission* as described here:
 
 ![token permission](../pictures/token-permission.png)
 
 > [!Note]
 > The *Path* (here above set to */*) can be used in option to restict the permission to
-> certains objects (VM or pool of VM for example).
-> One could organize all the VMs to be managed by proxmoxer to be set to a Proxmox *pool* named *HPCM*
+> certains objects (VM or pool of VM, for example).
+> One could organize all the VMs to be managed by *proxmoxbmc* to be set to a Proxmox *pool* named *HPCM*
 > and only allow the token to act on objects of that pool, by specifying the *Path* equal
 > to */pool/HPCM*.
 
@@ -214,7 +218,7 @@ restricted privileged and associate the token to this account without *privilege
 ## Proxmoxbmc Configuration with PVE
 
 To provide a BMC feature to a given VM the *pbmcd* daemon must also be configured.
-This is done using the **pbmc** command, which is available in the venv where proxmoxer
+This is done using the **pbmc** command, which is available in the venv where *proxmoxbmc*
 has been installed previously:
 
 ```
@@ -224,14 +228,13 @@ root@vbmc:~# source .env/bin/activate
 ```
 
 In the previous output:
-- we assigned TCP port 623 to the BMC of the compute03 we had created for HPCM PXE boot earlier. This
-  VM has a VMID of 113, where from the last argument on the command-line
-- the --address is *not* necessary, it restricts the interfaces on which the BMC will be reachable (by default vBMC is reachable by all interfaces)
+- we assigned UDP port 623 (the default BMC port) to the BMC of the VM *compute03* we had created for HPCM PXE boot earlier. This
+  VM has a VMID of 113, where from the last argument on the command-line,
+- the --address is *not* necessary, it restricts the interfaces on which the BMC will be reachable (by default the vBMCs are reachable by all interfaces)
 - the username and password are the one to use to connect to the virtual BMC service on this port. HPCM will need them to authenticate to the vBMC.
 - the proxmox-address is the hostname/IP address of one of the hypervisor of the PVE cluster. If a Virtual IP is available over the different hypervisors
   constituing this PVE cluster, this would be more robust to use it, instead of the one of a particular hypervisor of the cluster.
-- the token-user, token-name and token value are to be fetched from the token we just
-  created above.
+- the token-user, token-name and token value are to be fetched from the token we just created above.
 
 
 Now, let's check the status of our first BMC service:
@@ -246,8 +249,8 @@ Now, let's check the status of our first BMC service:
 (.env) root@vbmc:~/proxmoxbmc#
 ```
 
-in the previous output we see our virtual BMC for the VM which ID is 113 (compute03 VM).
-The status ```down``` is not those of the VM but of the virtual BMC service, so we
+In the previous output we see our virtual vBMC for the VM which ID is 113 (*compute03* VM).
+The status ```down``` is not the one of the VM but of the virtual BMC service, so we
 must first start it:
 
 ```
@@ -266,7 +269,7 @@ will not have to redo it in the future.
 
 ## Proxmox IPMI testing
 
-On the HPCM admin node, let's install *ipmitool*:
+On the HPCM admin node, let's install *ipmitool* if not already installed:
 
 >
 > dnf install ipmitool -y
@@ -303,13 +306,17 @@ And it is! The VM 113 is now really powered on!
 ## Conclusion
 
 We now have an VM with a BMC implemented as a virtual machine running the *pbmcd* daemon,
-thanks to the *proxmoxbmc* software. But *proxmoxbmc* is only able to provide standard
-BMC (listening on port UDP/623) to only one VM. For other VM the port the BMC listens on 
-must be non-standard... or one should deploy a VM with *proxmoxbmc* for each VM that to
-power of/off by mean of IPMI... this would be quite costly in resource.
+thanks to the *proxmoxbmc* software. But *proxmoxbmc* is only able to provide a single standard
+BMC (listening on port UDP/623). For other VMs the port the BMC must listens on will be a  
+non-standard port, as port UDP/623 is already used by the first vBMC... As a workaround, one
+should deploy several VM instances each running *proxmoxbmc*, one for each VM that to get
+power of/off feature by mean of IPMI... this would be quite costly in resource.
 
-Hopefully the [Multibmc](6-multibmc.md) program we provide in this project enhances the features
-of *proxmoxbmc* and reach that goal: A single VM to implement vBMC for all VMs.
+For tools like *ipmitool* that can address BMC on non standard port, *proxmoxbmc* is perfectly
+fine, but for HPCM which cannot and expect real hardware behind, we have an issue. 
+
+Hopefully the [Multibmc](6-multibmc.md) program provided in this project enhances the features
+of *proxmoxbmc* and reach that goal: A single VM to implement standard vBMC for all VMs.
 
 | [Prev](4-console-on-serial.md) | [top](../README.md)   |  [Next](6-multibmc.md)        |
 |:-------------------------------|:---------------------:|------------------------------:|
