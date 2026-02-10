@@ -15,8 +15,10 @@ command on the hypervisor itself.
 What is missing is a piece of sofware that links this hypervisor terminal
 to a IP/port and adhoc protocol (IPMI, Redfish...).
 
-FIn this page we will just see with HPCM how to use what's serial console is available on
-Proxmox and decide where a VM should push its *console* messages.
+In this page we will just see with HPCM how to use that serial interface to output console *console* messages to it.
+
+The advantage compared to using a virtual terminal (/dev/tty1 for example) as console, is the ability to copy and past from it as it
+runs in text mode unlike the virtual screen emulation of Proxmox --- where the virtual terminals show --- which is a graphical emulation.
 
 ## VM configuration
 
@@ -26,14 +28,14 @@ We detailed the VM setup previously, we just need to add, if not already done, a
 
 ##  HPCM configuration
 
-From HPCM standpoint, it's possible to modify the console port an existing compute node is expected to uses like this:
+From HPCM standpoint, it is possible to modify the console port an existing compute node is expected to uses:
 
 >
 > **cm node set --console-device ttyS0 -n compute03**
 >
 
 We could also setup a new node template like the [template2.txt](../resources/template2.txt)
-and upload it to the HPCM Database this way:
+and upload it to the HPCM Database that way:
 
 >
 > **cm node template update -c template2.txt**
@@ -63,7 +65,7 @@ starting serial terminal on interface serial0 (press Ctrl+O to exit)
 
 ```
 
-First, note that only a **CTRL+O** sequence will let you exit from this terminal line.
+First, note that only a **CTRL+O** sequence will let you exit from this terminal.
 
 After a few tens of seconds, the terminal clears and we can follow the boot process from that serial interface:
 
