@@ -78,8 +78,9 @@ Setting non-autoinstall nodes to provision on their next boot...
 [root@hpcm1 ~]#
 ```
 
->[!Note] that the ```--ignore-power-errors``` option is necessary for the command to succeed as HPCM has no way to check
->the power status of the VM. The same way the ```--stage``` option avoids HPCM trying (and failing) to reboot
+>[!Note]
+> The ```--ignore-power-errors``` option is necessary for the command to succeed as HPCM has no way to check
+>the power status of the VM. The same way, the ```--stage``` option avoids HPCM trying (and failing) to reboot
 >the virtual node.
 
 We also have to set what will be the root filesystem of the VM, here as the VM has no disk we'll use
