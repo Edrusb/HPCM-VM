@@ -1,26 +1,26 @@
 
 # HPCM Tweeking when no vBMC is present
-This page relates the setup of HPCM to manage a VM without vBMC, here the focus
+This page relates the setup of HPCM to manage a VM without vBMC. Here the focus
 is how to make a VM able to PXE boot with HPCM.
 
-Some VM specific aspects have to be taken into account in HPCM:
+Some VM specific aspects have to be taken into account with HPCM:
 - Unlike real compute nodes, VM do not have the BMC nor iLO stuf that let HPCM
   controlling their power.
-- The second point concerns the console port, VM usually have virtual display and use
-  a ```/dev/tty0``` in place of a ```/dev/ttyS0``` (serial interface) something HPCM
+- VM usually have virtual display and use
+  a ```/dev/tty0``` in place of a ```/dev/ttyS0``` (which is a serial interface) something HPCM
   expects by default.
 
 
 ## HPCM node template configuration for VM
 
-To cope with that once and for all compute node, let's setup this node template file
+To cope with that, once and for all compute node, let's setup this node template file
 [template1.txt](../resources/template1.txt), where we define:
 - conserver_logging to false, because HPCM does not have direct access to the VM console port
 - switch_mgmt_network to false, because the hypervisor internal network is managed manually,
   though if you have classical physical switches this might be reconsidered
 - console_device to tty1, that's the first virtual Linux console and should display the boot
   information to the VM console (else the boot message are not visible after the PXE process
-  has loaded the kernel and initramfs to RAM)
+  has loaded the kernel and initramfs to RAM, which avoid any troubleshooting passed that phase)
 - card_type to node, as we have no iLO nor BMC to manage the VMs
 
 Now we can feed the template to HPCM with the following command:
@@ -29,18 +29,16 @@ Now we can feed the template to HPCM with the following command:
 > **cm node template update -c template1.txt**
 >
 
-using
-
 ## Adding a new node to HPCM
 
-fetching the mac address the VM has on its interface to the "head" network, we can setup the
+After having fetched the mac address the VM has on its interface toward HPCM (on the "head" network), we can setup the
 following [compute03.txt](../resources/compute03.txt) file and feed it to HPCM with:
 
 >
 > **cm node add -c compute03.txt**
 >
 
-Some comments on this file content:
+Some comments on this file:
 - hostname1, as you guess this is the hostname HPCM will assign to the OS
 - internal_name, is mandatory and must be unique among other nodes, it must be of the for
   form **service<number>**
@@ -49,9 +47,13 @@ Some comments on this file content:
 
 >[!Note]
 > HPCM will set up a ```bond0``` bonding or LAG[^1] interface on top of it
+>
+
+[^1]: For clarity, Link AGgregation is the term used in the network culture, while bonding is the
+ term for almost the same thing in the system/compute culture.
 
 ## Provisionning an image
-Now that the node exists in the HPCM database, we can assign it an image:
+This node now exists in the HPCM database and we can assign it an image:
 
 >
 > **cm node provision -n compute03 -i rocky8.10  --ignore-power-errors --stage**
@@ -76,9 +78,9 @@ Setting non-autoinstall nodes to provision on their next boot...
 [root@hpcm1 ~]#
 ```
 
-Note that the ```--ignore-power-errors``` option is necessary for the command to succeed as HPCM has no way to check
-the power status of the VM. The same way the ```--stage``` option avoids HPCM trying (and failing) to reboot
-the virtual node.
+>[!Note] that the ```--ignore-power-errors``` option is necessary for the command to succeed as HPCM has no way to check
+>the power status of the VM. The same way the ```--stage``` option avoids HPCM trying (and failing) to reboot
+>the virtual node.
 
 We also have to set what will be the root filesystem of the VM, here as the VM has no disk we'll use
 NFS mount:
@@ -157,7 +159,7 @@ physical network redundancy
 
 ## Configuring the HSN side of the VM
 
-Currently the VM interfaces HPCM knows are:
+Currently the NICs HPCM knows for that VM are:
 
 ```
 [root@hpcm1 ~]# cm node nic show -n compute03
@@ -263,8 +265,7 @@ is the IP it has been assigned which is good!
 
 
 
-[^1]: For clarity, Link AGgregation is the term used in the network culture, while bonding is the
- term for almost the same thing in the system/compute culture.
+
 
 | [Prev](2-proxmox-setup.md) | [top](../README.md)   | [Next](4-console-on-serial.md) |
 |:---------------------------|:---------------------:|-------------------------------:|
