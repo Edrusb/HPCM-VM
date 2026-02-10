@@ -105,12 +105,12 @@ ExecStop  = /root/Multibmc/multibmc.py /etc/multibmc.json stop
 WantedBy = multi-user.target
 EOF
 ```
-Of course you will tune the pat of **ExecStart** and **ExecStop** to:
+Of course you will tune the path of **ExecStart** and **ExecStop** to:
 - the path where you have installed the *multibmc.py* program
 - the configuration file for this instance like here */etc/multibmc.json*
 
 If more than one instance (NIC, UDP range, configuration file) has to be
-run, several **ExecStart** and **ExecStop** can be added to this service file
+run, several **ExecStart** and **ExecStop** lines can be added to this service file
 
 # Integration with HPCM
 In the rest of this page we will determine the modifications to add to 
@@ -169,7 +169,7 @@ root@vbmc:~/Multibmc#
 ```
 
 And see that the correct IP addresses have been assigned to each VM. The UDP port
-colomn is the port *proxmoxbmc* uses, but this is hidden by *multibmc* as you will
+column is the port *proxmoxbmc* uses, but this is hidden by *multibmc* as you will
 use the standard 623/UDP port.
 
 
@@ -279,8 +279,8 @@ The goal of this project is reached: Having HPCM managing VMs with power on/off 
 
 There are still some restrictions compared to a real hardware based environment 
 (like the console access from HPCM, which *proxmoxbmc* does not seem to implement),
-but that already cool to be able to *provision* images and manage nodes automatically (without
-having to manually reboot the concerned nodes/VMs).
+but that's already much more comfortable to be able to *provision* images and manage nodes
+automatically from HPCM rather than having to manually reboot the concerned nodes/VMs.
 
 
 | [Prev](5-proxmoxbmc.md) | [top](../README.md)   |  --- |
