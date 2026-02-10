@@ -85,7 +85,32 @@ above).
 
 ## Systemd configuration file
 
----- TO BE ADDED ---
+To have *multibmc* started by systemd use the following configuration:
+
+```
+cat > /etc/systemd/system/multibmc.service <<EOF
+[Unit]
+Description = Multibmc service
+After = syslog.target
+After = network.target pbmc.service
+BindsTo = pbmcd.service
+
+[Service]
+Type = oneshot
+RemainAfterExit = yes
+ExecStart = /root/Multibmc/multibmc.py /etc/multibmc.json start
+ExecStop  = /root/Multibmc/multibmc.py /etc/multibmc.json stop
+
+[Install]
+WantedBy = multi-user.target
+EOF
+```
+Of course you will tune the pat of **ExecStart** and **ExecStop** to:
+- the path where you have installed the *multibmc.py* program
+- the configuration file for this instance like here */etc/multibmc.json*
+
+If more than one instance (NIC, UDP range, configuration file) has to be
+run, several **ExecStart** and **ExecStop** can be added to this service file
 
 # Integration with HPCM
 In the rest of this page we will determine the modifications to add to 
