@@ -34,7 +34,7 @@ The HPCM features that will not be available in a VM environment are:
 - remote console port access
 - Slingshot HSN managment (well, I have not checked whether a software emulation was exiting, but I doubt it would, correct me if I'm wrong!!!)
 
-## Table of Content
+## Table of Contents
 
 ### 1 - [Requirements](doc/1-requirements.md)
 ### 2 - [VM Implementation](doc/2-proxmox-setup.md)
