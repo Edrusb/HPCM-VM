@@ -28,7 +28,7 @@ is not the target here. The objective of this project is rather the ability to u
 - power management (the ability to power of/off a given compute node from HPCM) thanks to virtual BMCs
 
 The grey zone:
-- network switch managment (you need an HPCM supported switch, but the virtual switches will not be managed/visible by HPCM)
+- network switch managment (you need an HPCM supported switch, but the virtual switches inside the proxmox hypervisors will not be managed/visible by HPCM)
 
 The HPCM features that will not be available in a VM environment are:
 - remote console port access
