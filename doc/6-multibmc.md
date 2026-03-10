@@ -43,6 +43,14 @@ Several instances of *multibmc* can be run on this VM, they should have their ow
 > ./multibmc.py /etc/multibmc.json **add** 111 10.25.255.250 16
 >
 
+>[!Note]
+> Using a alias for each multibmc configuration file make it even easier to use:
+> >
+> > echo 'alias multibmc="/path/to/multibmc.py /etc/multibmc.json"' >> ~/.bashrc
+> > multibmc ***add*** 111 10.25.255.250 16
+> >
+>
+
 Using this command we create a new vBMC and store its configuration in /etc/multibmc.json configuration file
 - **111** is the VM ID of the VM to be controlled by this vBMC
 - **10.25.255.250** and **16** define the IP/mask of the IP address to create for this vBMC. This IP address will be added to the **ens19** network interface (interface provided in rhe previous step).
