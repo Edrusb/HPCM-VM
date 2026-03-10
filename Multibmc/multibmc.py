@@ -435,8 +435,14 @@ class vbmcbase:
 
         self._check_initialized()
 
+        # adding a new sub-interface
+        iface_name = self._build_link_name(vmid)
+        cmd = "ip link add link {} name {} type macvlan mode bridge".format(self.net_dev, iface_name)
+        if os_system(cmd) != 0:
+            raise ValueError("shell command failed: {}".format(cmd))
+
         # adding a new IP address
-        cmd = "ip addr add {}/{} dev {} label {}".format(self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].masklen, self.net_dev, vmid)
+        cmd = "ip addr add {}/{} dev {} label {}".format(self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].masklen, iface_name, vmid)
         if os_system(cmd) != 0:
             raise ValueError("shell command failed: {}".format(cmd))
 
@@ -475,14 +481,15 @@ class vbmcbase:
         self._check_initialized()
 
         error = []
+        iface_name = self._build_link_name(vmid)
 
         # removing iptable rule
         cmd = "iptables -t nat -D PREROUTING -i {} -p udp --dport 623 -d {} -j REDIRECT --to-ports {}".format(self.net_dev, self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].udp_port)
         if os_system(cmd) != 0:
             error.append(cmd)
 
-        # removing the extra IP
-        cmd = "ip addr delete {}/{} dev {} label {}".format(self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].masklen, self.net_dev, vmid)
+        # removing the interface
+        cmd = "ip link del {}".format(iface_name)
         if os_system(cmd) != 0:
             error.append(cmd)
 
@@ -533,6 +540,12 @@ class vbmcbase:
         x = os_system("source {} 2> /dev/null || . {} 2> /dev/null ; pbmc --version > /dev/null".format(self.venv_path, self.venv_path))
         if x != 0:
             raise ValueError("pbmc command not found in venv activated by {}".format(self.venv_path))
+
+    def _build_link_name(self, vmid):
+        """
+        define the name of a subinterface based on the ethernet interface name and the vmid ot has to be assigned for
+        """
+        return self.net_dev + "-" + vmid
 
     ### class static fields
 
