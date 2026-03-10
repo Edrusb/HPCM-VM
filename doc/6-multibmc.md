@@ -65,7 +65,9 @@ Using this command we create a new vBMC and store its configuration in /etc/mult
 >
 
 This gives content visibility of the /etc/multibmc.json configuration file (You could also
-use the *jq* program, but would have to interprete the meaning of the different fields)
+use the *jq* program, but would have to interprete the meaning of the different fields). Note also
+that the MAC addresses displayed for each BMC are fetched from the system and will show "N/A"
+if the **start** command (see below) has not yet been run:
 
 >
 > ./multibmc.py /etc/multibmc.json **start**
@@ -73,7 +75,7 @@ use the *jq* program, but would have to interprete the meaning of the different 
 > ./multibmc.py /etc/multibmc.json **stop**
 >
 
-this form is to be run from the *init* process, like systemd for example (see below for
+These previous forms are to be run from the *init* process, like systemd for example (see below for
 a systemd configuration file).
 
 >
@@ -121,14 +123,14 @@ If more than one instance (NIC, UDP range, configuration file) has to be
 run, several **ExecStart** and **ExecStop** lines can be added to this service file
 
 # Integration with HPCM
-In the rest of this page we will determine the modifications to add to 
+In the rest of this page we will determine the modifications to add to
 HPCM in order to leverage the vBMC additions we did for the three additional
 VMs we created from compute03.
 
 ## Multibmc configuration
 
 Continuing with our example, we cloned the compute03 VM as compute01, compute02 and
-compute04. So we now have four VMs. Cleaning all previous vBMC on the VM hosting **proxmoxbmc** we 
+compute04. So we now have four VMs. Cleaning all previous vBMC on the VM hosting **proxmoxbmc** we
 now just have to create the vBMCs using the following commands:
 
 ```
@@ -164,14 +166,14 @@ Proxmox host: proxmox-6
 
 Configured BMCs:
 ------------------
-+--------+---------------------+-------+
-|  VM ID |     IP address      | UDP   |
-+--------+---------------------+-------+
-|    111 |      10.25.100.1/16 | 11000 |
-|    112 |      10.25.100.2/16 | 11001 |
-|    113 |      10.25.100.3/16 | 11002 |
-|    115 |      10.25.100.4/16 | 11003 |
-+--------+---------------------+-------+
++--------+---------------------+-------------------+-------+
+|  VM ID |     IP address      |    MAC address    | UDP   |
++--------+---------------------+-------------------+-------+
+|    111 |      10.25.100.1/16 | 8e:7a:9a:de:a3:c1 | 11000 |
+|    112 |      10.25.100.2/16 | aa:5d:8a:1a:a5:95 | 11001 |
+|    113 |      10.25.100.3/16 | 8e:7a:9a:de:a3:c0 | 11002 |
+|    115 |      10.25.100.4/16 | 8e:7a:9a:12:6a:fd | 11003 |
++--------+---------------------+-------------------+-------+
 
 root@vbmc:~/Multibmc#
 ```
@@ -184,7 +186,7 @@ use the standard 623/UDP port.
 ## updating the VM template in HPCM
 
 the VM template can be updated to include the IPMI credentials and some
-network informations, we will thus use this updated [template3.txt](../resources/template3.txt) file:
+network informations including the mac addresses displayed above, we will thus use this updated [template3.txt](../resources/template3.txt) file:
 
 >
 > cm node template update -c template3.txt
@@ -197,12 +199,8 @@ the best approach as this implies us to provide the MAC addresses of these new V
 up the configfile part (here [three-new-nodes.txt](../resources/three-new-nodes.txt)) describing the nodes to add:
 
 >
-> cm node add -c three-new-nodes.txt --allow-duplicate-macs-and-ips
+> cm node add -c three-new-nodes.txt
 >
-
->[!important]
->We need the *--allow-duplicate-macs-and-ips* because, if the different vBMC are using different IPs, they
->use the same MAC address, the one of the ens19 interface of the auxilliary VM, in our lab case.
 
 Next, we need to specify for the three new VMs, as we did for compute03, the ipmi protocol to use:
 
@@ -285,7 +283,7 @@ compute01
 
 The goal of this project is reached: Having HPCM managing VMs with power on/off and PXE-boot support.
 
-There are still some restrictions compared to a real hardware based environment 
+There are still some restrictions compared to a real hardware based environment
 (like the console access from HPCM, which *proxmoxbmc* does not seem to implement),
 but that's already much more comfortable to be able to *provision* images and manage nodes
 automatically from HPCM rather than having to manually reboot the concerned nodes/VMs.
