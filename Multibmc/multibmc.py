@@ -40,6 +40,20 @@ def os_system(cmd):
         return os.system(cmd)
 
 
+class faked_stream:
+    def __init__(self):
+        pass
+
+    def read(self):
+        return ""
+
+def os_popen(cmd):
+    if DEBUG:
+        print("would grab output of: {}".format(cmd))
+        tmp = faked_stream()
+        return tmp
+    else:
+        return os.popen(cmd)
 
 ####
 # class vbmc holds attributes associated to a VMID: IP/mask/UDP
@@ -300,12 +314,13 @@ class vbmcbase:
         if len(self.vbmcs) == 0:
             print("None")
         else:
-            print("+--------+---------------------+-------+")
-            print("|  VM ID |     IP address      | UDP   |")
-            print("+--------+---------------------+-------+")
+            print("+--------+---------------------+-------------------+-------+")
+            print("|  VM ID |     IP address      |    MAC address    | UDP   |")
+            print("+--------+---------------------+-------------------+-------+")
             for x in self.vbmcs:
-                print("| {:>6} | {:>16}/{:<2} | {:>5} |".format(x, self.vbmcs[x].ipv4addr, self.vbmcs[x].masklen, self.vbmcs[x].udp_port))
-            print("+--------+---------------------+-------+")
+                mac = self._get_mac(x)
+                print("| {:>6} | {:>16}/{:<2} | {:>17} | {:>5} |".format(x, self.vbmcs[x].ipv4addr, self.vbmcs[x].masklen, mac, self.vbmcs[x].udp_port))
+            print("+--------+---------------------+-------------------+-------+")
         print("")
 
     def check(self):
@@ -546,6 +561,31 @@ class vbmcbase:
         define the name of a subinterface based on the ethernet interface name and the vmid ot has to be assigned for
         """
         return self.net_dev + "-" + vmid
+
+    def _get_mac(self, vmid):
+        """
+        fetch from the system the mac address assigned to the vBMC
+
+        returns "N/A" if the system has not been set from the database
+        """
+        iface_name = self._build_link_name(vmid)
+
+        # the following variable has the same lenght of a usual notation of MAC address
+        no_answer_string = "------ N/A ------"
+
+        cmd1 = "ip a show dev {} 1> /dev/null 2> /dev/null".format(iface_name)
+        cmd2 = "ip a show dev {} 2> /dev/null | sed -rn -e 's#^\s+link/ether\s([:0-9a-f]+)\s.*#\\1#p'".format(iface_name)
+        x = os_system(cmd1)
+        if x != 0:
+            return no_answer_string
+
+        y = os_popen(cmd2)
+        x = y.read().replace("\n", "")
+        if x == "" or len(x) != len(no_answer_string):
+            return "mac fetch failed"
+        else:
+            return x
+
 
     ### class static fields
 
