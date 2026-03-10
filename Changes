@@ -1,0 +1,5 @@
+from version 1.0.0 to version 1.1.0
+- implementation now set also a dedicated MAC address
+  per vBMC.
+- Updated the list operation to show the MAC addresses
+  assigned by the system to each vBMC
