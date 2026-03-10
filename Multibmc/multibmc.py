@@ -503,7 +503,8 @@ class vbmcbase:
         if os_system(cmd) != 0:
             error.append(cmd)
 
-        # removing the interface
+        # removing the extra IP
+        # cmd = "ip addr delete {}/{} dev {} label {}".format(self.vbmcs[vmid].ipv4addr, self.vbmcs[vmid].masklen, self.net_dev, vmid)
         cmd = "ip link del {}".format(iface_name)
         if os_system(cmd) != 0:
             error.append(cmd)
