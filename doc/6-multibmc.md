@@ -44,7 +44,7 @@ Several instances of *multibmc* can be run on this VM, they should have their ow
 >
 
 >[!Note]
-> Using a alias for each multibmc configuration file make it even easier to use:
+> Using an alias for each multibmc configuration file make it even easier to use:
 > >
 > > echo 'alias multibmc="/path/to/multibmc.py /etc/multibmc.json"' >> ~/.bashrc
 > >
